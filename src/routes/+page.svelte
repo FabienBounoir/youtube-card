@@ -3,6 +3,9 @@
 	import Configuration from '$lib/components/Configuration.svelte';
 	import Card from '$lib/components/Card.svelte';
 
+	/**
+	 * @type {{ initial: boolean, thumbnail: string, channelLogo: string, title: string, channel: string, views: string, time: string, duration: string }}
+	 */
 	let data = {
 		initial: true,
 		thumbnail: '/thumbnail.webp',
@@ -14,6 +17,9 @@
 		duration: '09:27'
 	};
 
+	/**
+	 * @type {{ initial: boolean, displayChannel: boolean, duration: number, displayMeta: boolean, theme: string }}
+	 */
 	let config = {
 		initial: true,
 		displayChannel: false,
@@ -37,6 +43,11 @@
 		}
 	});
 
+	/**
+	 *
+	 * @param type {string}
+	 * @param value {any}
+	 */
 	const updateLocalStorage = (type, value) => {
 		if (typeof localStorage !== 'undefined') {
 			if (value.initial) {

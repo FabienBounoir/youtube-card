@@ -1,5 +1,12 @@
 <script>
+	/**
+	 * @type {{ initial: boolean, thumbnail: string, channelLogo: string, title: string, channel: string, views: string, time: string, duration: string }}
+	 */
 	export let data;
+
+	/**
+	 * @type {{ initial: boolean, displayChannel: boolean, duration: number, displayMeta: boolean, theme: string }}
+	 */
 	export let config;
 </script>
 

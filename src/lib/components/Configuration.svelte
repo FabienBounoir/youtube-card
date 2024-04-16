@@ -2,8 +2,15 @@
 	import { snacks } from '$lib/stores/snacks';
 	import { toPng } from 'html-to-image';
 
-	export let config;
+	/**
+	 * @type {{ initial: boolean, thumbnail: string, channelLogo: string, title: string, channel: string, views: string, time: string, duration: string }}
+	 */
 	export let data;
+
+	/**
+	 * @type {{ initial: boolean, displayChannel: boolean, duration: number, displayMeta: boolean, theme: string }}
+	 */
+	export let config;
 
 	let url = '';
 	let waitingGeneration = false;
@@ -62,11 +69,12 @@
 		});
 		const a = document.createElement('a');
 		a.href = dataUrl;
-		a.download = `youtube-${data.channel}-${data.title}.png`;
+		a.download = `ytb-${data.channel}-${data.title}.png`;
 		a.click();
 
 		waitingGeneration = false;
 		downloaded = true;
+
 		setTimeout(() => {
 			downloaded = false;
 		}, 2000);
@@ -81,8 +89,7 @@
 		 */
 		const node = document.querySelector('.youtube-card');
 		toPng(node, {
-			quality: 1,
-			skipAutoScale: true
+			quality: 1
 		}).then(async (dataUrl) => {
 			await navigator.clipboard.write([
 				new ClipboardItem({
@@ -91,8 +98,8 @@
 			]);
 
 			waitingGeneration = false;
-
 			copied = true;
+
 			setTimeout(() => {
 				copied = false;
 			}, 2000);

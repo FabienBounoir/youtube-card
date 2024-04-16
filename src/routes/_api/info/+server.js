@@ -17,8 +17,11 @@ export const POST = async ({ request }) => {
         version: "v3",
     });
 
+    /**
+     * @type {import("googleapis").youtube_v3.Schema$VideoListResponse}
+     */
     const videoResponse = await youtubeClient.videos.list({
-        part: 'snippet,contentDetails,statistics',
+        part: ["snippet", "contentDetails", "statistics"],
         id: videoId
     });
 
@@ -28,8 +31,11 @@ export const POST = async ({ request }) => {
 
     const channelId = videoResponse.data.items[0].snippet.channelId;
 
+    /**
+     * @type {import("@googleapis").youtube_v3.Schema$ChannelListResponse}
+     */
     const channelResponse = await youtubeClient.channels.list({
-        part: 'snippet,contentDetails,statistics',
+        part: ["snippet", "contentDetails", "statistics"],
         id: channelId
     });
 
@@ -44,15 +50,23 @@ export const POST = async ({ request }) => {
     return json({
         thumbnail: await imageToBase64(videoInfo.snippet.thumbnails?.maxres?.url || videoInfo.snippet.thumbnails.high.url || videoInfo.snippet.thumbnails.default.url),
         channelLogo: await imageToBase64(channelInfo.snippet.thumbnails.default.url),
-        title: videoInfo.snippet.title,
-        channel: channelInfo.snippet.title,
+        title: videoInfo.snippet.title || "Title not found",
+        channel: channelInfo.snippet.title || "Channel not found",
         views: formatViews(videoInfo.statistics.viewCount),
         time: dayjs(videoInfo.snippet.publishedAt).fromNow(),
         duration: dayjs.duration(videoInfo.contentDetails.duration).format("mm:ss"),
     })
 };
 
+/**
+ * 
+ * @param {string} views 
+ * @returns 
+ */
 const formatViews = (views) => {
+    /**
+     * @type {Record<string, number>}
+     */
     const abbreviations = {
         'k': 1000,
         'm': 1000000,
@@ -71,7 +85,11 @@ const formatViews = (views) => {
     return views.toString();
 }
 
-
+/**
+ * 
+ * @param {string} url 
+ * @returns 
+ */
 const imageToBase64 = async (url) => {
     try {
         const response = await fetch(url);
