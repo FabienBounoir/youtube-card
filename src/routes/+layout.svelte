@@ -1,7 +1,7 @@
 <script>
+	import Snacks from '$lib/components/Snacks.svelte';
 	import '@fortawesome/fontawesome-free/css/all.min.css';
 	import '../app.scss';
-	import Snacks from '$lib/components/Snacks.svelte';
 </script>
 
 <div>
