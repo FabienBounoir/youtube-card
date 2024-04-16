@@ -4,19 +4,19 @@
 	let data = {
 		thumbnail: '/thumbnail.webp',
 		channelLogo: '/basti-logo.png',
-		title: 'Les tendances Design pour réussir en 2024',
+		title: 'Je quitte mon CDI de Designer',
 		channel: 'BastiUi',
 		views: '31,2 k vues',
 		time: 'il y a 2 ans',
 		duration: '09:27'
 	};
 
-	let url = 'https://www.youtube.com/watch?v=BRUgZmCTQDs';
+	let url = '';
 
 	let config = {
 		displayChannel: false,
-		duration: 30,
-		displayMeta: false,
+		duration: 0,
+		displayMeta: true,
 		theme: 'dark'
 	};
 
@@ -51,7 +51,9 @@
 		waitingGeneration = true;
 		downloaded = false;
 		const node = document.querySelector('.youtube-card');
-		const dataUrl = await toPng(node);
+		const dataUrl = await toPng(node, {
+			quality: 1
+		});
 		const a = document.createElement('a');
 		a.href = dataUrl;
 		a.download = `youtube-${data.channel}-${data.title}.png`;
@@ -68,7 +70,10 @@
 		waitingGeneration = true;
 		copied = false;
 		const node = document.querySelector('.youtube-card');
-		toPng(node).then(async (dataUrl) => {
+		toPng(node, {
+			quality: 1,
+			skipAutoScale: true
+		}).then(async (dataUrl) => {
 			await navigator.clipboard.write([
 				new ClipboardItem({
 					'image/png': dataUrlToBlob(dataUrl)
@@ -124,83 +129,92 @@
 							{#if config.displayChannel}
 								<span>{data.channel}</span>
 							{/if}
-							<span>{data.views} vuesㆍ{data.time}</span>
+							<span>{data.views} vues • {data.time}</span>
 						</div>
 					{/if}
 				</div>
 			</div>
 		</div>
 	</div>
-	<div class="config">
-		<h1>Card options</h1>
-		<div class="input-container">
-			<input
-				bind:value={url}
-				placeholder="Paste youtube video URL and hit enter"
-				on:keyup={(e) => e.key === 'Enter' && getVideoData(url)}
-			/>
-			<button on:click={getVideoData(url)}>Get Video <i class="fa-solid fa-arrow-right"></i></button
-			>
-		</div>
+	<div class="configuration">
+		<div class="config">
+			<h1>Card options</h1>
+			<div class="input-container">
+				<input
+					bind:value={url}
+					placeholder="Paste youtube video URL"
+					on:keyup={(e) => e.key === 'Enter' && getVideoData(url)}
+				/>
+				<button on:click={getVideoData(url)}
+					>Get Video <i class="fa-solid fa-arrow-right"></i></button
+				>
+			</div>
 
-		<div class="config-container">
-			<span>Display channel logo</span>
-			<input type="checkbox" bind:checked={config.displayChannel} />
-		</div>
+			<div class="config-container">
+				<span>Display channel logo</span>
+				<input type="checkbox" bind:checked={config.displayChannel} />
+			</div>
 
-		<div class="config-container">
-			<span>Display statistics</span>
-			<input type="checkbox" bind:checked={config.displayMeta} />
-		</div>
+			<div class="config-container">
+				<span>Display statistics</span>
+				<input type="checkbox" bind:checked={config.displayMeta} />
+			</div>
 
-		<div class="config-container">
-			<span
-				>Duration {#if config.duration > 0}<span class="lenght">{config.duration}</span>{/if}</span
-			>
-			<input type="range" bind:value={config.duration} min="0" max="100" />
-		</div>
+			<div class="config-container">
+				<span
+					>Duration {#if config.duration > 0}<span class="lenght">{config.duration}</span
+						>{/if}</span
+				>
+				<input type="range" bind:value={config.duration} min="0" max="100" />
+			</div>
 
-		<div class="config-container">
-			<span>Theme</span>
-			<select bind:value={config.theme}>
-				<option value="dark">Dark</option>
-				<option value="white">White</option>
-			</select>
-		</div>
+			<div class="config-container">
+				<span>Theme</span>
+				<select bind:value={config.theme}>
+					<option value="dark">Dark</option>
+					<option value="white">White</option>
+				</select>
+			</div>
 
-		<div class="button-container">
-			<button on:click={copyToClipboard} disabled={waitingGeneration}>
-				{#if copied}
-					Copied!
-				{:else if waitingGeneration}
-					Generating...
-				{:else}
-					Copy
-				{/if}
-			</button>
+			<div class="button-container">
+				<button on:click={copyToClipboard} disabled={waitingGeneration}>
+					{#if copied}
+						Copied!
+					{:else if waitingGeneration}
+						Generating...
+					{:else}
+						Copy
+					{/if}
+				</button>
 
-			<button on:click={download} disabled={waitingGeneration}>
-				{#if downloaded}
-					Dowloaded!
-				{:else if waitingGeneration}
-					Generating...
-				{:else}
-					Download
-				{/if}
-			</button>
+				<button on:click={download} disabled={waitingGeneration}>
+					{#if downloaded}
+						Dowloaded!
+					{:else if waitingGeneration}
+						Generating...
+					{:else}
+						Download
+					{/if}
+				</button>
+			</div>
 		</div>
+		<p>
+			Project by <a href="https://www.youtube.com/@BastiUi">@Bouns</a>, source code available on
+			<a href="https://github.com/FabienBounoir/youtube-card">Github</a>.
+		</p>
 	</div>
 </section>
 
 <style lang="scss">
 	section {
 		accent-color: red;
-
-		display: grid;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
 		max-width: 1280px;
 		grid-template-columns: 1fr 400px;
 		gap: 1.5rem;
-		margin: 0 auto;
+		// margin: 0 auto;
 
 		.design {
 			background-color: red;
@@ -226,7 +240,6 @@
 					0 1px 2px -1px rgba(0, 0, 0, 0.1);
 				padding: 1rem;
 				min-width: min(100%, 350px);
-				//aspect-ratio: 16 / 12;
 
 				.navigation {
 					position: absolute;
@@ -366,6 +379,24 @@
 					h3 {
 						color: #0f0f0f;
 					}
+				}
+			}
+		}
+
+		.configuration {
+			display: flex;
+			flex-direction: column;
+			gap: 1rem;
+
+			p {
+				font-size: 0.875rem;
+				line-height: 1.25rem;
+				text-align: center;
+
+				a {
+					color: #f0f0f0;
+					font-weight: bold;
+					text-decoration: none;
 				}
 			}
 		}

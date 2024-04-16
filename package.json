@@ -34,6 +34,7 @@
 		"clipboardy": "^4.0.0",
 		"dayjs": "^1.11.10",
 		"html-to-image": "^1.11.11",
-		"node-html-to-image": "^4.0.0"
+		"node-html-to-image": "^4.0.0",
+		"sonner": "^1.4.41"
 	}
 }
