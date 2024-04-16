@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,600;1,700;1,800;1,900&display=swap");
 
+
 *,
 *::after,
 *::before {
@@ -12,6 +13,18 @@
 
 :root {
 	font-family: "Nunito", sans-serif;
-    background-color: rgb(17 17 17);
-    color: rgb(212 212 212);
+	background-color: rgb(17 17 17);
+	color: rgb(212 212 212);
+
+	--primary-100: #ffdddd;
+	--primary-200: #ffc0c0;
+	--primary-300: #ff9494;
+	--primary-400: #ff5757;
+	--primary-500: #ff2323;
+	--primary-600: #ff0000;
+	--primary-700: #d70000;
+	--primary-800: #b10303;
+	--primary-900: #920a0a;
+	--primary-950: #500000;
+
 }

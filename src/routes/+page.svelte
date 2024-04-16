@@ -1,7 +1,10 @@
 <script>
 	import { toPng } from 'html-to-image';
+	import { snacks } from '$lib/stores/snacks';
+	import { onMount } from 'svelte';
 
 	let data = {
+		initial: true,
 		thumbnail: '/thumbnail.webp',
 		channelLogo: '/basti-logo.png',
 		title: 'Je quitte mon CDI de Designer',
@@ -14,6 +17,7 @@
 	let url = '';
 
 	let config = {
+		initial: true,
 		displayChannel: false,
 		duration: 0,
 		displayMeta: true,
@@ -24,6 +28,47 @@
 	let copied = false;
 	let downloaded = false;
 
+	$: config && updateConfig();
+	$: data && updateData();
+
+	onMount(() => {
+		const savedConfig = localStorage.getItem('config');
+		const savedData = localStorage.getItem('data');
+		if (savedConfig) {
+			config = JSON.parse(savedConfig);
+		}
+
+		if (savedData) {
+			data = JSON.parse(savedData);
+		}
+	});
+
+	const updateConfig = () => {
+		if (typeof localStorage !== 'undefined') {
+			if (config.initial) {
+				config.initial = false;
+				return;
+			}
+
+			localStorage.setItem('config', JSON.stringify(config));
+		}
+	};
+
+	const updateData = () => {
+		if (typeof localStorage !== 'undefined') {
+			if (data.initial) {
+				data.initial = false;
+				return;
+			}
+
+			localStorage.setItem('data', JSON.stringify(data));
+		}
+	};
+
+	/**
+	 *
+	 * @param url {string}
+	 */
 	const findVideoId = (url) => {
 		const regex =
 			/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
@@ -31,25 +76,41 @@
 		return match ? match[1] : null;
 	};
 
+	/**
+	 *
+	 * @param url {string}
+	 */
 	const getVideoData = async (url) => {
 		const videoId = findVideoId(url);
-		if (!videoId) return;
+		if (!videoId) return snacks.error('Invalid youtube video URL');
 
-		const response = await fetch(`/_api/info`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({ videoId })
-		});
-		const videoData = await response.json();
-		console.log(videoData);
-		data = videoData;
+		try {
+			const response = await fetch(`/_api/info`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ videoId })
+			});
+
+			if (response.status !== 200) {
+				snacks.error('An error occured while fetching the video data');
+				return;
+			}
+
+			data = await response.json();
+		} catch (error) {
+			snacks.error('An error occured while fetching the video data');
+		}
 	};
 
 	const download = async () => {
 		waitingGeneration = true;
 		downloaded = false;
+
+		/**
+		 * @type {HTMLElement}
+		 */
 		const node = document.querySelector('.youtube-card');
 		const dataUrl = await toPng(node, {
 			quality: 1
@@ -69,6 +130,10 @@
 	const copyToClipboard = () => {
 		waitingGeneration = true;
 		copied = false;
+
+		/**
+		 * @type {HTMLElement}
+		 */
 		const node = document.querySelector('.youtube-card');
 		toPng(node, {
 			quality: 1,
@@ -89,6 +154,11 @@
 		});
 	};
 
+	/**
+	 *
+	 * @param {string} dataUrl
+	 * @returns {Blob}
+	 */
 	const dataUrlToBlob = (dataUrl) => {
 		var base64Index = dataUrl.indexOf('base64,') + 'base64,'.length;
 		var base64 = dataUrl.substring(base64Index);

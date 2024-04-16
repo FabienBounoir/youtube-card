@@ -26,10 +26,8 @@ export const POST = async ({ request }) => {
         return error(404, "Video not found");
     }
 
-    // Récupérer l'ID de la chaîne à partir de la vidéo
     const channelId = videoResponse.data.items[0].snippet.channelId;
 
-    // Récupérer les informations de la chaîne
     const channelResponse = await youtubeClient.channels.list({
         part: 'snippet,contentDetails,statistics',
         id: channelId
@@ -42,8 +40,6 @@ export const POST = async ({ request }) => {
     dayjs.locale("fr");
     dayjs.extend(duration);
     dayjs.extend(relativeTime);
-
-    console.log("channelInfo.snippet.thumbnails", channelInfo.snippet.thumbnails);
 
     return json({
         thumbnail: await imageToBase64(videoInfo.snippet.thumbnails?.maxres?.url || videoInfo.snippet.thumbnails.high.url || videoInfo.snippet.thumbnails.default.url),
@@ -78,11 +74,9 @@ const formatViews = (views) => {
 
 const imageToBase64 = async (url) => {
     try {
-        // Récupérer l'image à partir de l'URL
         const response = await fetch(url);
         const imageData = await response.arrayBuffer();
 
-        // Convertir l'image en Base64
         const base64Image = Buffer.from(imageData).toString('base64');
         return `data:image/png;base64,${base64Image}`;
     } catch (error) {
