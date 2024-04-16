@@ -211,10 +211,8 @@
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: center;
-		max-width: 1280px;
 		grid-template-columns: 1fr 400px;
 		gap: 1.5rem;
-		// margin: 0 auto;
 
 		.design {
 			background-color: red;
