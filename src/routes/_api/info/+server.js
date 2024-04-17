@@ -55,6 +55,7 @@ export const POST = async ({ request }) => {
         views: formatViews(videoInfo.statistics.viewCount),
         time: dayjs(videoInfo.snippet.publishedAt).fromNow(),
         duration: dayjs.duration(videoInfo.contentDetails.duration).format("mm:ss"),
+        isLive: videoInfo.snippet.liveBroadcastContent === "live",
     })
 };
 
@@ -68,9 +69,9 @@ const formatViews = (views) => {
      * @type {Record<string, number>}
      */
     const abbreviations = {
-        'k': 1000,
-        'm': 1000000,
-        'b': 1000000000
+        'Md': 1000000000,
+        'M': 1000000,
+        'k': 1000
     };
 
     for (const symbol in abbreviations) {

@@ -12,20 +12,22 @@
 		channelLogo: '/basti-logo.png',
 		title: 'Je quitte mon CDI de Designer',
 		channel: 'BastiUi',
-		views: '31,2 k vues',
+		views: '31,2 k',
 		time: 'il y a 2 ans',
 		duration: '09:27'
 	};
 
 	/**
-	 * @type {{ initial: boolean, displayChannel: boolean, duration: number, displayMeta: boolean, theme: string }}
+	 * @type {{ initial: boolean, displayChannel: boolean, duration: number, displayMeta: boolean, theme: string, size: number, displayDuration: boolean }}
 	 */
 	let config = {
 		initial: true,
 		displayChannel: false,
 		duration: 0,
 		displayMeta: true,
-		theme: 'dark'
+		theme: 'dark',
+		size: 1,
+		displayDuration: true
 	};
 
 	$: updateLocalStorage('config', config);

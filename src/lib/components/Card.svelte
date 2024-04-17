@@ -1,11 +1,14 @@
 <script>
+	import { blur } from 'svelte/transition'
+	import { backIn } from 'svelte/easing'
+
 	/**
 	 * @type {{ initial: boolean, thumbnail: string, channelLogo: string, title: string, channel: string, views: string, time: string, duration: string }}
 	 */
 	export let data;
 
 	/**
-	 * @type {{ initial: boolean, displayChannel: boolean, duration: number, displayMeta: boolean, theme: string }}
+	 * @type {{ initial: boolean, displayChannel: boolean, duration: number, displayMeta: boolean, theme: string, displayDuration: boolean }}
 	 */
 	export let config;
 </script>
@@ -13,8 +16,12 @@
 <div class="design">
 	<div class="youtube-card {config.theme}">
 		<div class="thumbnail" style="background-image: url({data.thumbnail})">
-			{#if data.duration}
+			{#if data.duration && config.displayDuration}
+				{#if data.isLive}
+				<div class="duration live">EN DIRECT</div>
+				{:else}
 				<div class="duration">{data.duration}</div>
+				{/if}
 			{/if}
 
 			{#if config.duration > 0}
@@ -51,7 +58,9 @@
 		align-items: center;
 		justify-content: center;
 		border-radius: 0.75rem;
-		padding: 5rem;
+		min-width: 40vw;
+		min-height: 40vh;
+		padding: 1rem;
 
 		.youtube-card {
 			transition: all 0.3s;
@@ -193,6 +202,11 @@
 				.duration {
 					color: #fff;
 					background-color: rgba(0, 0, 0, 0.6);
+
+					&.live{
+						background-color: rgba(204,0,0,0.85) !important;
+						font-weight: 600;
+					}
 				}
 			}
 
@@ -205,6 +219,13 @@
 					color: #0f0f0f;
 				}
 			}
+		}
+	}
+
+	@media screen and (max-width: 700px) {
+		.design {
+			padding: 1rem;
+			min-width: 90vw;
 		}
 	}
 </style>

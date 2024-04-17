@@ -8,14 +8,12 @@
 	export let data;
 
 	/**
-	 * @type {{ initial: boolean, displayChannel: boolean, duration: number, displayMeta: boolean, theme: string }}
+	 * @type {{ initial: boolean, displayChannel: boolean, duration: number, displayMeta: boolean, theme: string, size: number, displayDuration: boolean }}
 	 */
 	export let config;
 
 	let url = '';
 	let waitingGeneration = false;
-	let copied = false;
-	let downloaded = false;
 
 	/**
 	 *
@@ -56,15 +54,17 @@
 		}
 	};
 
-	const download = async () => {
+	const download = async (e) => {
 		waitingGeneration = true;
-		downloaded = false;
+		e.target.innerText = 'Generating...';
 
 		/**
 		 * @type {HTMLElement}
 		 */
 		const node = document.querySelector('.youtube-card');
 		const dataUrl = await toPng(node, {
+			canvasWidth: node.offsetWidth * (config.size || 1),
+			canvasHeight: node.offsetHeight * (config.size	|| 1),
 			quality: 1
 		});
 		const a = document.createElement('a');
@@ -73,22 +73,24 @@
 		a.click();
 
 		waitingGeneration = false;
-		downloaded = true;
+		e.target.innerText = 'Downloaded!';
 
 		setTimeout(() => {
-			downloaded = false;
+			e.target.innerText = 'Download';
 		}, 2000);
 	};
 
-	const copyToClipboard = () => {
+	const copyToClipboard = (e) => {
 		waitingGeneration = true;
-		copied = false;
+		e.target.innerText = 'Generating...';
 
 		/**
 		 * @type {HTMLElement}
 		 */
 		const node = document.querySelector('.youtube-card');
 		toPng(node, {
+			canvasWidth: node.offsetWidth * (config.size || 1),
+			canvasHeight: node.offsetHeight * (config.size || 1),
 			quality: 1
 		}).then(async (dataUrl) => {
 			await navigator.clipboard.write([
@@ -98,10 +100,10 @@
 			]);
 
 			waitingGeneration = false;
-			copied = true;
+			e.target.innerText = 'Copied!';
 
 			setTimeout(() => {
-				copied = false;
+				e.target.innerText = 'Copy';
 			}, 2000);
 		});
 	};
@@ -152,11 +154,17 @@
 		</div>
 
 		<div class="config-container">
+			<span>Display duration</span>
+			<input type="checkbox" bind:checked={config.displayDuration} />
+		</div>
+
+		<div class="config-container">
 			<span
-				>Duration {#if config.duration > 0}<span class="lenght">{config.duration}</span>{/if}</span
+				>Progress {#if config.duration > 0}<span class="lenght">{config.duration}</span>{/if}</span
 			>
 			<input type="range" bind:value={config.duration} min="0" max="100" />
 		</div>
+
 
 		<div class="config-container">
 			<span>Theme</span>
@@ -166,25 +174,18 @@
 			</select>
 		</div>
 
+		<div class="config-container">
+			<span>Size <span class="lenght">x{config.size  || 1}</span></span>
+			<input type="range" bind:value={config.size} min="1" max="10" step="1" />
+		</div>
+
 		<div class="button-container">
 			<button on:click={copyToClipboard} disabled={waitingGeneration}>
-				{#if copied}
-					Copied!
-				{:else if waitingGeneration}
-					Generating...
-				{:else}
 					Copy
-				{/if}
 			</button>
 
 			<button on:click={download} disabled={waitingGeneration}>
-				{#if downloaded}
-					Dowloaded!
-				{:else if waitingGeneration}
-					Generating...
-				{:else}
-					Download
-				{/if}
+				Download
 			</button>
 		</div>
 	</div>
@@ -262,6 +263,11 @@
 				&:hover {
 					background-color: rgb(38 38 38);
 				}
+
+				&:disabled {
+					background-color: rgb(81 4 4);
+					cursor: not-allowed;
+				}
 			}
 		}
 
@@ -315,6 +321,13 @@
 				border: 0px solid transparent;
 				cursor: pointer;
 			}
+		}
+	}
+
+	@media screen and (max-width: 700px) {
+		.configuration {
+			width: 100%;
+			margin: 0 2rem;
 		}
 	}
 </style>
