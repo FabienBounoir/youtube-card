@@ -64,7 +64,7 @@
 		const node = document.querySelector('.youtube-card');
 		const dataUrl = await toPng(node, {
 			canvasWidth: node.offsetWidth * (config.size || 1),
-			canvasHeight: node.offsetHeight * (config.size	|| 1),
+			canvasHeight: node.offsetHeight * (config.size || 1),
 			quality: 1
 		});
 		const a = document.createElement('a');
@@ -139,8 +139,7 @@
 				placeholder="Paste youtube video URL"
 				on:keyup={(e) => e.key === 'Enter' && getVideoData(url)}
 			/>
-			<button on:click={getVideoData(url)}>Get Video <i class="fa-solid fa-arrow-right"></i></button
-			>
+			<button on:click={getVideoData(url)}>Find <i class="fa-solid fa-arrow-right"></i></button>
 		</div>
 
 		<div class="config-container">
@@ -165,7 +164,6 @@
 			<input type="range" bind:value={config.duration} min="0" max="100" />
 		</div>
 
-
 		<div class="config-container">
 			<span>Theme</span>
 			<select bind:value={config.theme}>
@@ -175,18 +173,14 @@
 		</div>
 
 		<div class="config-container">
-			<span>Size <span class="lenght">x{config.size  || 1}</span></span>
+			<span>Size <span class="lenght">x{config.size || 1}</span></span>
 			<input type="range" bind:value={config.size} min="1" max="10" step="1" />
 		</div>
 
 		<div class="button-container">
-			<button on:click={copyToClipboard} disabled={waitingGeneration}>
-					Copy
-			</button>
+			<button on:click={copyToClipboard} disabled={waitingGeneration}> Copy </button>
 
-			<button on:click={download} disabled={waitingGeneration}>
-				Download
-			</button>
+			<button on:click={download} disabled={waitingGeneration}> Download </button>
 		</div>
 	</div>
 	<p>
