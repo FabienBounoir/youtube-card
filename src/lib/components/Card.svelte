@@ -1,9 +1,6 @@
 <script>
-	import { blur } from 'svelte/transition'
-	import { backIn } from 'svelte/easing'
-
 	/**
-	 * @type {{ initial: boolean, thumbnail: string, channelLogo: string, title: string, channel: string, views: string, time: string, duration: string }}
+	 * @type {{ initial: boolean, thumbnail: string, channelLogo: string, title: string, channel: string, views: string, time: string, duration: string , isLive: boolean}}
 	 */
 	export let data;
 
@@ -202,11 +199,11 @@
 				.duration {
 					color: #fff;
 					background-color: rgba(0, 0, 0, 0.6);
+				}
 
-					&.live{
-						background-color: rgba(204,0,0,0.85) !important;
-						font-weight: 600;
-					}
+				.live{
+					background-color: rgba(204,0,0,0.85) !important;
+					font-weight: 600;
 				}
 			}
 

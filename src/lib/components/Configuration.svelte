@@ -160,7 +160,7 @@
 
 		<div class="config-container">
 			<span
-				>Progress {#if config.duration > 0}<span class="lenght">{config.duration}</span>{/if}</span
+				>Progress {#if config.duration > 0}<span class="lenght">{config.duration}%</span>{/if}</span
 			>
 			<input type="range" bind:value={config.duration} min="0" max="100" />
 		</div>
@@ -190,7 +190,7 @@
 		</div>
 	</div>
 	<p>
-		Project by <a href="https://www.youtube.com/@BastiUi">@Bouns</a>, source code available on
+		Project by <a href="https://bento.me/fabienbounoir">@Bouns</a>, source code available on
 		<a href="https://github.com/FabienBounoir/youtube-card">Github</a>.
 	</p>
 </div>

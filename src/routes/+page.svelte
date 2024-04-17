@@ -25,8 +25,8 @@
 		displayChannel: false,
 		duration: 0,
 		displayMeta: true,
-		theme: 'dark',
-		size: 1,
+		theme: 'white',
+		size: 2,
 		displayDuration: true
 	};
 

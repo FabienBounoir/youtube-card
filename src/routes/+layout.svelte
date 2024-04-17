@@ -20,6 +20,10 @@
 </div>
 
 <style lang="scss">
+	div{
+		margin-bottom: 2rem;
+	}
+
 	header {
 		text-align: center;
 		display: flex;
