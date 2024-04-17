@@ -15,9 +15,9 @@
 		<div class="thumbnail" style="background-image: url({data.thumbnail})">
 			{#if data.duration && config.displayDuration}
 				{#if data.isLive}
-				<div class="duration live">EN DIRECT</div>
+					<div class="duration live">EN DIRECT</div>
 				{:else}
-				<div class="duration">{data.duration}</div>
+					<div class="duration">{data.duration}</div>
 				{/if}
 			{/if}
 
@@ -64,11 +64,6 @@
 			max-width: min(100%, 400px);
 			background-color: white;
 			border-radius: 1rem;
-			box-shadow:
-				0 0 #0000,
-				0 0 #0000,
-				0 1px 3px 0 rgba(0, 0, 0, 0.1),
-				0 1px 2px -1px rgba(0, 0, 0, 0.1);
 			padding: 1rem;
 			min-width: min(100%, 350px);
 
@@ -201,8 +196,8 @@
 					background-color: rgba(0, 0, 0, 0.6);
 				}
 
-				.live{
-					background-color: rgba(204,0,0,0.85) !important;
+				.live {
+					background-color: rgba(204, 0, 0, 0.85) !important;
 					font-weight: 600;
 				}
 			}
