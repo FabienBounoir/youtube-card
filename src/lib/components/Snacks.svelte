@@ -2,6 +2,8 @@
 	import { scale, slide } from 'svelte/transition';
 	import { snacks } from '$lib/stores/snacks';
 	import Icon from './Icon.svelte';
+
+	$: if ($snacks.length > 3) snacks.remove($snacks[0]);
 </script>
 
 {#if $snacks.length}
@@ -28,14 +30,15 @@
 		overflow: auto;
 		list-style: none;
 		width: 15em;
+		z-index: 1000;
 	}
 
 	li {
 		position: relative;
 		margin-top: 1em;
-		background-color: var(--primary-600);
+		background-color: rgb(29, 29, 29);
 		border: 1px solid currentColor;
-		color: var(--primary-100);
+		color: var(--primary-200);
 		border-radius: 1em;
 		padding: 1em;
 		transform-origin: inherit;

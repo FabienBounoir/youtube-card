@@ -6,16 +6,7 @@
 	/**
 	 * @type {{ initial: boolean, thumbnail: string, channelLogo: string, title: string, channel: string, views: string, time: string, duration: string }}
 	 */
-	let data = {
-		initial: true,
-		thumbnail: '/thumbnail.webp',
-		channelLogo: '/basti-logo.png',
-		title: 'Je quitte mon CDI de Designer',
-		channel: 'BastiUi',
-		views: '31,2 k',
-		time: 'il y a 2 ans',
-		duration: '09:27'
-	};
+	let data = null;
 
 	/**
 	 * @type {{ initial: boolean, displayChannel: boolean, duration: number, displayMeta: boolean, theme: string, size: number, displayDuration: boolean }}
@@ -30,6 +21,8 @@
 		displayDuration: true
 	};
 
+	let loading = false;
+
 	$: updateLocalStorage('config', config);
 	$: updateLocalStorage('data', data);
 
@@ -42,6 +35,17 @@
 
 		if (savedData) {
 			data = JSON.parse(savedData);
+		} else {
+			data = {
+				initial: true,
+				thumbnail: '/thumbnail.webp',
+				channelLogo: '/basti-logo.png',
+				title: 'Je quitte mon CDI de Designer',
+				channel: 'BastiUi',
+				views: '31,2 k',
+				time: 'il y a 2 ans',
+				duration: '09:27'
+			};
 		}
 	});
 
@@ -51,25 +55,27 @@
 	 * @param value {any}
 	 */
 	const updateLocalStorage = (type, value) => {
-		if (typeof localStorage !== 'undefined') {
-			if (value.initial) {
-				value.initial = false;
-				return;
-			}
+		try {
+			if (typeof localStorage !== 'undefined') {
+				if (value.initial) {
+					value.initial = false;
+					return;
+				}
 
-			if (type === 'config') {
-				localStorage.setItem('config', JSON.stringify(value));
-			} else {
-				localStorage.setItem('data', JSON.stringify(value));
+				if (type === 'config') {
+					localStorage.setItem('config', JSON.stringify(value));
+				} else {
+					localStorage.setItem('data', JSON.stringify(value));
+				}
 			}
-		}
+		} catch (e) {}
 	};
 </script>
 
 <section>
-	<Card bind:data bind:config />
+	<Card bind:data bind:config bind:loading />
 
-	<Configuration bind:config bind:data />
+	<Configuration bind:config bind:data bind:loading />
 </section>
 
 <style lang="scss">

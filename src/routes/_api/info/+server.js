@@ -21,9 +21,10 @@ export const POST = async ({ request }) => {
      * @type {import("googleapis").youtube_v3.Schema$VideoListResponse}
      */
     const videoResponse = await youtubeClient.videos.list({
-        part: ["snippet", "contentDetails", "statistics"],
+        part: ["snippet", "contentDetails", "statistics", "liveStreamingDetails"],
         id: videoId
     });
+
 
     if (videoResponse?.data?.items == null || videoResponse?.data?.items?.length === 0) {
         return error(404, "Video not found");
@@ -48,16 +49,29 @@ export const POST = async ({ request }) => {
     dayjs.extend(relativeTime);
 
     return json({
-        thumbnail: await imageToBase64(videoInfo.snippet.thumbnails?.maxres?.url || videoInfo.snippet.thumbnails.high.url || videoInfo.snippet.thumbnails.default.url),
-        channelLogo: await imageToBase64(channelInfo.snippet.thumbnails.default.url),
-        title: videoInfo.snippet.title || "Title not found",
-        channel: channelInfo.snippet.title || "Channel not found",
-        views: formatViews(videoInfo.statistics.viewCount),
-        time: dayjs(videoInfo.snippet.publishedAt).fromNow(),
-        duration: dayjs.duration(videoInfo.contentDetails.duration).format("mm:ss"),
-        isLive: videoInfo.snippet.liveBroadcastContent === "live",
+        thumbnail: await imageToBase64(videoInfo?.snippet?.thumbnails?.maxres?.url || videoInfo?.snippet?.thumbnails?.high?.url || videoInfo?.snippet?.thumbnails?.default?.url),
+        channelLogo: await imageToBase64(channelInfo?.snippet.thumbnails?.default?.url),
+        title: videoInfo?.snippet?.title || "Title not found",
+        channel: channelInfo?.snippet?.title || "Channel not found",
+        views: formatViews(videoInfo?.statistics.viewCount),
+        time: dayjs(videoInfo?.snippet?.publishedAt).fromNow(),
+        duration: dayjs.duration(videoInfo?.contentDetails?.duration).format("mm:ss"),
+        isLive: videoInfo?.snippet?.liveBroadcastContent === "live",
+        viewers: formatViews(videoInfo?.liveStreamingDetails?.concurrentViewers) || 0,
+        isUpcoming: videoInfo?.snippet?.liveBroadcastContent === "upcoming",
+        startDate: formatDate(videoInfo?.liveStreamingDetails?.scheduledStartTime)
     })
 };
+
+/**
+ * 
+ * @param {string} dateString 
+ * @returns 
+ */
+function formatDate(dateString) {
+    const date = dayjs(dateString);
+    return date.format('DD/MM/YYYY HH:mm');
+}
 
 /**
  * 
@@ -83,7 +97,7 @@ const formatViews = (views) => {
         }
     }
 
-    return views.toString();
+    return views || "0";
 }
 
 /**

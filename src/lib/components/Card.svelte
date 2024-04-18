@@ -1,6 +1,6 @@
 <script>
 	/**
-	 * @type {{ initial: boolean, thumbnail: string, channelLogo: string, title: string, channel: string, views: string, time: string, duration: string , isLive: boolean}}
+	 * @type {{ initial: boolean, thumbnail: string, channelLogo: string, title: string, channel: string, views: string, time: string, duration: string , isLive: boolean, isUpcoming: boolean, startDate: string, viewers: string }}
 	 */
 	export let data;
 
@@ -8,45 +8,59 @@
 	 * @type {{ initial: boolean, displayChannel: boolean, duration: number, displayMeta: boolean, theme: string, displayDuration: boolean }}
 	 */
 	export let config;
+
+	/**
+	 * @type {boolean}
+	 */
+	export let loading;
 </script>
 
 <div class="design">
-	<div class="youtube-card {config.theme}">
-		<div class="thumbnail" style="background-image: url({data.thumbnail})">
-			{#if data.duration && config.displayDuration}
-				{#if data.isLive}
-					<div class="duration live">EN DIRECT</div>
-				{:else}
-					<div class="duration">{data.duration}</div>
+	{#if data}
+		<div class="youtube-card {config.theme} {loading ? 'loading' : ''}">
+			<div class="thumbnail" style="background-image: url({data?.thumbnail})">
+				{#if data?.duration && config.displayDuration}
+					{#if data?.isLive}
+						<div class="duration live">EN DIRECT</div>
+					{:else if data?.isUpcoming}
+						<div class="duration upcoming">À VENIR</div>
+					{:else}
+						<div class="duration">{data?.duration}</div>
+					{/if}
 				{/if}
-			{/if}
 
-			{#if config.duration > 0}
-				<div class="navigation" style="--progress: {config.duration}%"></div>
-			{/if}
-		</div>
-		<div class="info">
-			{#if config.displayChannel}
-				<img src={data.channelLogo} alt="youtube channel logo" />
-			{/if}
-			<div>
-				<h3>{data.title}</h3>
-				{#if config.displayMeta}
-					<div class="meta">
-						{#if config.displayChannel}
-							<span>{data.channel}</span>
-						{/if}
-						<span>{data.views} vues • {data.time}</span>
-					</div>
+				{#if config.duration > 0}
+					<div class="navigation" style="--progress: {config.duration}%"></div>
 				{/if}
 			</div>
+			<div class="info">
+				{#if config.displayChannel}
+					<img src={data?.channelLogo} alt="youtube channel logo" />
+				{/if}
+				<div>
+					<h3>{data?.title}</h3>
+					{#if config.displayMeta}
+						<div class="meta">
+							{#if config.displayChannel}
+								<span>{data?.channel}</span>
+							{/if}
+							{#if data?.isUpcoming}
+								<span>Planifier pour le {data?.startDate}</span>
+							{:else if data?.isLive}
+								<span>{data?.viewers} spectateurs</span>
+							{:else}
+								<span>{data?.views} vues • {data?.time}</span>
+							{/if}
+						</div>
+					{/if}
+				</div>
+			</div>
 		</div>
-	</div>
+	{/if}
 </div>
 
 <style lang="scss">
 	.design {
-		background-color: red;
 		display: flex;
 		flex-direction: column;
 
@@ -58,6 +72,7 @@
 		min-width: 40vw;
 		min-height: 40vh;
 		padding: 1rem;
+		width: min-content;
 
 		.youtube-card {
 			transition: all 0.3s;
@@ -66,6 +81,22 @@
 			border-radius: 1rem;
 			padding: 1rem;
 			min-width: min(100%, 350px);
+
+			&.loading {
+				animation: loadingEffectOpacity 1.5s ease-in-out infinite;
+			}
+
+			@keyframes loadingEffectOpacity {
+				0% {
+					opacity: 0.3;
+				}
+				50% {
+					opacity: 0.6;
+				}
+				100% {
+					opacity: 0.3;
+				}
+			}
 
 			.navigation {
 				position: absolute;
@@ -166,6 +197,11 @@
 					color: #fff;
 					background-color: rgba(0, 0, 0, 0.6);
 				}
+
+				.live {
+					background-color: rgba(204, 0, 0, 0.85) !important;
+					font-weight: 600;
+				}
 			}
 
 			.info {
@@ -179,7 +215,8 @@
 			}
 		}
 
-		.white {
+		.white,
+		.light {
 			.navigation {
 				width: 100%;
 				background-color: #5e5e5ee8;
