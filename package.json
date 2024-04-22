@@ -29,8 +29,8 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@fortawesome/fontawesome-free": "^6.5.2",
 		"@googleapis/youtube": "^14.0.0",
+		"@vercel/analytics": "^1.2.2",
 		"dayjs": "^1.11.10",
 		"html-to-image": "^1.11.11"
 	}

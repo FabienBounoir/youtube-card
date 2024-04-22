@@ -1,7 +1,12 @@
 <script>
 	import Snacks from '$lib/components/Snacks.svelte';
-	import '@fortawesome/fontawesome-free/css/all.min.css';
 	import '../app.scss';
+	import { onMount } from 'svelte';
+	import { inject } from '@vercel/analytics';
+
+	onMount(() => {
+		inject();
+	});
 </script>
 
 <div>
