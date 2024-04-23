@@ -1,8 +1,13 @@
 <script>
 	import { snacks } from '$lib/stores/snacks';
 	import { toPng } from 'html-to-image';
+	import { scale } from 'svelte/transition';
 	import Switch from './Switch.svelte';
+	import Tooltip from './Tooltip.svelte';
 
+	/**
+	 * @type {string | null}
+	 */
 	let action = null;
 
 	/**
@@ -11,7 +16,7 @@
 	export let data;
 
 	/**
-	 * @type {{ initial: boolean, displayChannel: boolean, duration: number, displayMeta: boolean, theme: string, size: number, displayDuration: boolean }}
+	 * @type {{ initial: boolean, displayChannel: boolean, duration: number, displayMeta: boolean, theme: string, size: number, displayDuration: boolean, url: string, advanced: boolean, rounding: number, textSize: number }}
 	 */
 	export let config;
 
@@ -61,6 +66,7 @@
 			}
 
 			data = await response.json();
+			config.url = url;
 			loading = false;
 		} catch (error) {
 			loading = false;
@@ -162,18 +168,126 @@
 		</div>
 
 		<div class="config-container">
-			<span>Display channel logo</span>
-			<Switch label="" design="slider" bind:value={config.displayChannel} />
-		</div>
+			<span>Display</span>
 
-		<div class="config-container">
-			<span>Display statistics</span>
-			<Switch label="" design="slider" bind:value={config.displayMeta} />
-		</div>
+			<div class="display-config-button">
+				<Tooltip title="Channel">
+					<button
+						class={config.displayChannel ? 'activate displaybutton' : 'displaybutton'}
+						on:click={() => (config.displayChannel = !config.displayChannel)}
+					>
+						<svg
+							width="15px"
+							height="15px"
+							viewBox="0 0 24 24"
+							fill="none"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<path
+								opacity="0.4"
+								d="M12.1207 12.78C12.0507 12.77 11.9607 12.77 11.8807 12.78C10.1207 12.72 8.7207 11.28 8.7207 9.50998C8.7207 7.69998 10.1807 6.22998 12.0007 6.22998C13.8107 6.22998 15.2807 7.69998 15.2807 9.50998C15.2707 11.28 13.8807 12.72 12.1207 12.78Z"
+								stroke="#f0f0f0"
+								stroke-width="1.5"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+							/>
+							<path
+								opacity="0.34"
+								d="M18.7398 19.3801C16.9598 21.0101 14.5998 22.0001 11.9998 22.0001C9.39977 22.0001 7.03977 21.0101 5.25977 19.3801C5.35977 18.4401 5.95977 17.5201 7.02977 16.8001C9.76977 14.9801 14.2498 14.9801 16.9698 16.8001C18.0398 17.5201 18.6398 18.4401 18.7398 19.3801Z"
+								stroke="#f0f0f0"
+								stroke-width="1.5"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+							/>
+							<path
+								d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+								stroke="#f0f0f0"
+								stroke-width="1.5"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+							/>
+						</svg>
+					</button>
+				</Tooltip>
 
-		<div class="config-container">
-			<span>Display duration</span>
-			<Switch label="" design="slider" bind:value={config.displayDuration} />
+				<Tooltip title="Statistics">
+					<button
+						class={config.displayMeta ? 'activate displaybutton' : 'displaybutton'}
+						on:click={() => (config.displayMeta = !config.displayMeta)}
+					>
+						<svg
+							width="15px"
+							height="15px"
+							viewBox="0 0 24 24"
+							fill="none"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<path
+								d="M2 22H22"
+								stroke="#f0f0f0"
+								stroke-width="1.5"
+								stroke-miterlimit="10"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+							/>
+							<path
+								d="M9.75 4V22H14.25V4C14.25 2.9 13.8 2 12.45 2H11.55C10.2 2 9.75 2.9 9.75 4Z"
+								stroke="#f0f0f0"
+								stroke-width="1.5"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+							/>
+							<path
+								opacity="0.4"
+								d="M3 10V22H7V10C7 8.9 6.6 8 5.4 8H4.6C3.4 8 3 8.9 3 10Z"
+								stroke="#f0f0f0"
+								stroke-width="1.5"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+							/>
+							<path
+								opacity="0.4"
+								d="M17 15V22H21V15C21 13.9 20.6 13 19.4 13H18.6C17.4 13 17 13.9 17 15Z"
+								stroke="#f0f0f0"
+								stroke-width="1.5"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+							/>
+						</svg>
+					</button>
+				</Tooltip>
+
+				<Tooltip title="Duration">
+					<button
+						class={config.displayDuration ? 'activate displaybutton' : 'displaybutton'}
+						on:click={() => (config.displayDuration = !config.displayDuration)}
+					>
+						<svg
+							width="15px"
+							height="15px"
+							viewBox="0 0 24 24"
+							fill="none"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<path
+								d="M22 12C22 17.52 17.52 22 12 22C6.48 22 2 17.52 2 12C2 6.48 6.48 2 12 2C17.52 2 22 6.48 22 12Z"
+								stroke="#f0f0f0"
+								stroke-width="1.5"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+							/>
+							<path
+								opacity="0.4"
+								d="M15.7099 15.1798L12.6099 13.3298C12.0699 13.0098 11.6299 12.2398 11.6299 11.6098V7.50977"
+								stroke="#f0f0f0"
+								stroke-width="1.5"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+							/>
+						</svg>
+					</button>
+				</Tooltip>
+			</div>
 		</div>
 
 		<div class="config-container">
@@ -201,7 +315,7 @@
 						<path
 							d="M3.32031 11.6835C3.32031 16.6541 7.34975 20.6835 12.3203 20.6835C16.1075 20.6835 19.3483 18.3443 20.6768 15.032C19.6402 15.4486 18.5059 15.6834 17.3203 15.6834C12.3497 15.6834 8.32031 11.654 8.32031 6.68342C8.32031 5.50338 8.55165 4.36259 8.96453 3.32996C5.65605 4.66028 3.32031 7.89912 3.32031 11.6835Z"
 							stroke="#f0f0f0"
-							stroke-width="2"
+							stroke-width="1.5"
 							stroke-linecap="round"
 							stroke-linejoin="round"
 						/>
@@ -265,6 +379,25 @@
 			<input type="range" bind:value={config.size} min="1" max="10" step="1" />
 		</div>
 
+		<div class="config-container">
+			<span>Advance configuration</span>
+			<Switch label="" design="slider" bind:value={config.advanced} />
+		</div>
+
+		{#if config.advanced}
+			<div class="config-submenu" transition:scale>
+				<span
+					>• Rounding <span class="lenght">x{config.rounding < 0 ? '-1' : config.rounding}</span
+					></span
+				>
+				<input type="range" bind:value={config.rounding} min="-0.1" max="5" step="0.1" />
+			</div>
+			<div class="config-submenu" transition:scale>
+				<span>• Text size <span class="lenght">x{config.textSize}</span></span>
+				<input type="range" bind:value={config.textSize} min="0.5" max="1.5" step="0.1" />
+			</div>
+		{/if}
+
 		<div class="button-container">
 			<button
 				class={action == 'copy' ? 'loading' : ''}
@@ -324,13 +457,30 @@
 		}
 	}
 
-	.theme-button {
+	.display-config-button {
+		gap: 0.5rem;
+
+		.displaybutton:hover svg {
+			animation: scale 0.6s ease infinite alternate;
+		}
+	}
+
+	@keyframes scale {
+		0% {
+			transform: scale(1);
+		}
+		100% {
+			transform: scale(0.8);
+		}
+	}
+
+	.theme-button,
+	.display-config-button {
 		display: flex;
 		align-items: center;
 		justify-content: center;
 
-		.dark-theme,
-		.light-theme {
+		button {
 			display: flex;
 			padding: 0.3rem 0.8rem;
 			background-color: rgb(23 23 23);
@@ -348,6 +498,13 @@
 				width: 1.3rem;
 				height: 1.3rem;
 			}
+
+			opacity: 0.5;
+		}
+
+		.activate {
+			background-color: rgb(38 38 38);
+			opacity: 1;
 		}
 
 		.light-theme {
@@ -406,6 +563,7 @@
 
 		.select {
 			background-color: rgb(38 38 38);
+			opacity: 1;
 		}
 	}
 
@@ -428,6 +586,22 @@
 			width: 100%;
 
 			border-top: 1px solid rgb(229 229 229 / 0.1);
+
+			.lenght {
+				background-color: rgba(23 23 23);
+				border: 1px solid rgb(38 38 38);
+				font-size: 0.7rem;
+				border-radius: 0.375rem;
+				padding: 2px 5px;
+			}
+		}
+
+		.config-submenu {
+			display: flex;
+			padding: 0.3rem 1rem 0.8rem 2rem;
+			justify-content: space-between;
+			align-items: center;
+			width: 100%;
 
 			.lenght {
 				background-color: rgba(23 23 23);
@@ -477,6 +651,7 @@
 		}
 
 		.input-container {
+			background-color: rgb(23 23 23);
 			display: flex;
 			flex-direction: row;
 			flex-wrap: nowrap;
@@ -487,15 +662,11 @@
 			outline: 2px solid transparent;
 			outline-offset: 2px;
 
-			box-shadow:
-				0 0 #0000,
-				0 0 #0000,
-				0 1px 3px 0 rgba(0, 0, 0, 0.1),
-				0 1px 2px -1px rgba(0, 0, 0, 0.1);
+			border: 1px solid rgb(229 229 229 / 0.1);
 
 			margin: 0.5rem 1rem;
 			padding: 6px 0.35rem;
-			border: 1px solid rgb(229 229 229 / 0.3);
+
 			border-radius: 0.5rem;
 
 			input {

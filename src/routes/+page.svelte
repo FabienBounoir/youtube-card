@@ -9,7 +9,7 @@
 	let data = null;
 
 	/**
-	 * @type {{ initial: boolean, displayChannel: boolean, duration: number, displayMeta: boolean, theme: string, size: number, displayDuration: boolean }}
+	 * @type {{ initial: boolean, displayChannel: boolean, duration: number, displayMeta: boolean, theme: string, size: number, displayDuration: boolean, url: string }}
 	 */
 	let config = {
 		initial: true,
@@ -29,6 +29,7 @@
 	onMount(() => {
 		const savedConfig = localStorage.getItem('config');
 		const savedData = localStorage.getItem('data');
+
 		if (savedConfig) {
 			config = JSON.parse(savedConfig);
 		}
@@ -47,7 +48,65 @@
 				duration: '09:27'
 			};
 		}
+
+		const urlParams = new URLSearchParams(window.location.search);
+		const sharedData = urlParams.get('config');
+
+		if (sharedData) {
+			/**
+			 * @type {{ url: string }}
+			 */
+			const parsedData = JSON.parse(atob(sharedData));
+
+			console.log('config.url', config.url);
+			console.log('parsedData.url', parsedData.url);
+			console.log('parsedData', parsedData);
+
+			config = {
+				...config,
+				...parsedData
+			};
+
+			if (config.url != parsedData.url) {
+				getVideo();
+			}
+		}
 	});
+
+	const getVideo = async () => {
+		const videoId = findVideoId(config.url);
+
+		try {
+			loading = true;
+			const response = await fetch(`/_api/info`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ videoId })
+			});
+
+			if (response.status !== 200) {
+				return;
+			}
+
+			data = await response.json();
+			loading = false;
+		} catch (error) {
+			loading = false;
+		}
+	};
+
+	/**
+	 *
+	 * @param url {string}
+	 */
+	const findVideoId = (url) => {
+		const regex =
+			/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+		const match = url.match(regex);
+		return match ? match[1] : null;
+	};
 
 	/**
 	 *
@@ -67,8 +126,17 @@
 				} else {
 					localStorage.setItem('data', JSON.stringify(value));
 				}
+
+				updateQueryParams();
 			}
 		} catch (e) {}
+	};
+
+	const updateQueryParams = () => {
+		const params = new URLSearchParams();
+		params.set('config', btoa(JSON.stringify(config)));
+
+		history.pushState({}, '', `?${params.toString()}`);
 	};
 </script>
 

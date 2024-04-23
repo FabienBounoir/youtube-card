@@ -5,7 +5,7 @@
 	export let data;
 
 	/**
-	 * @type {{ initial: boolean, displayChannel: boolean, duration: number, displayMeta: boolean, theme: string, displayDuration: boolean }}
+	 * @type {{ initial: boolean, displayChannel: boolean, duration: number, displayMeta: boolean, theme: string, displayDuration: boolean, rounding: number, textSize: number, advanced: boolean }}
 	 */
 	export let config;
 
@@ -17,7 +17,12 @@
 
 <div class="design">
 	{#if data}
-		<div class="youtube-card {config.theme} {loading ? 'loading' : ''}">
+		<div
+			class="youtube-card {config.theme} {loading ? 'loading' : ''}"
+			style="--rounding: {config.advanced ? config.rounding : 1}; --text-size: {config.advanced
+				? config.textSize
+				: 1};{config.rounding < 0 ? ` border-radius: 0 !important;` : ''}"
+		>
 			<div class="thumbnail" style="background-image: url({data?.thumbnail})">
 				{#if data?.duration && config.displayDuration}
 					{#if data?.isLive}
@@ -78,7 +83,7 @@
 			transition: all 0.3s;
 			max-width: min(100%, 400px);
 			background-color: white;
-			border-radius: 1rem;
+			border-radius: calc(((0.5rem * var(--rounding, 1)) + 1rem));
 			padding: 1rem;
 			min-width: min(100%, 350px);
 
@@ -118,7 +123,7 @@
 
 			.thumbnail {
 				position: relative;
-				border-radius: 0.5rem;
+				border-radius: calc(0.5rem * var(--rounding, 1));
 				overflow: hidden;
 				aspect-ratio: 16 / 9;
 				background-position: center;
@@ -134,7 +139,7 @@
 					right: 0;
 					display: inline-flex;
 					padding: 3px 4px;
-					border-radius: 4px;
+					border-radius: calc(4px * var(--rounding, 1));
 					font-size: 0.75rem;
 					margin: 0.5rem;
 					font-weight: 500;
@@ -154,8 +159,8 @@
 					justify-content: center;
 
 					font-family: 'Roboto', 'Arial', sans-serif;
-					font-size: 1rem;
-					line-height: 1.5rem;
+					font-size: calc(1rem * var(--text-size, 1));
+					line-height: calc(1.5rem * var(--text-size, 1));
 					font-weight: 400;
 
 					span {
@@ -174,6 +179,7 @@
 				}
 
 				h3 {
+					font-size: calc(1.17rem * var(--text-size, 1));
 					margin: 12px 0 4px 0;
 					text-overflow: ellipsis;
 				}
