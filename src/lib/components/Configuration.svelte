@@ -1,7 +1,7 @@
 <script>
 	import { snacks } from '$lib/stores/snacks';
 	import { toPng } from 'html-to-image';
-	import { scale } from 'svelte/transition';
+	import { fade, scale, slide } from 'svelte/transition';
 	import Switch from './Switch.svelte';
 	import Tooltip from './Tooltip.svelte';
 
@@ -42,6 +42,7 @@
 	/**
 	 *
 	 * @param url {string}
+	 * @param notif {boolean}
 	 */
 	const getVideoData = async (url, notif) => {
 		const videoId = findVideoId(url);
@@ -74,13 +75,17 @@
 		}
 	};
 
+	/**
+	 *
+	 * @param e {MouseEvent | any}
+	 */
 	const download = async (e) => {
 		waitingGeneration = true;
 		action = 'download';
 		e.target.innerText = 'Generate';
 
 		/**
-		 * @type {HTMLElement}
+		 * @type {HTMLElement | any}
 		 */
 		const node = document.querySelector('.youtube-card');
 		const dataUrl = await toPng(node, {
@@ -102,13 +107,17 @@
 		}, 2000);
 	};
 
+	/**
+	 *
+	 * @param e {MouseEvent | any}
+	 */
 	const copyToClipboard = (e) => {
 		waitingGeneration = true;
 		e.target.innerText = 'Generate';
 		action = 'copy';
 
 		/**
-		 * @type {HTMLElement}
+		 * @type {HTMLElement | any}
 		 */
 		const node = document.querySelector('.youtube-card');
 		toPng(node, {
@@ -381,20 +390,35 @@
 
 		<div class="config-container">
 			<span>Advance configuration</span>
-			<Switch label="" design="slider" bind:value={config.advanced} />
+			<Switch bind:value={config.advanced} />
 		</div>
 
 		{#if config.advanced}
-			<div class="config-submenu" transition:scale>
-				<span
-					>• Rounding <span class="lenght">x{config.rounding < 0 ? '-1' : config.rounding}</span
+			<div class="config-submenu" transition:slide>
+				<span transition:fade
+					>• Rounding <span class="lenght"
+						>x{config.rounding < 0 ? '-1' : config.rounding || 1}</span
 					></span
 				>
-				<input type="range" bind:value={config.rounding} min="-0.1" max="5" step="0.1" />
+				<input
+					transition:fade
+					type="range"
+					bind:value={config.rounding}
+					min="-0.1"
+					max="5"
+					step="0.1"
+				/>
 			</div>
-			<div class="config-submenu" transition:scale>
-				<span>• Text size <span class="lenght">x{config.textSize}</span></span>
-				<input type="range" bind:value={config.textSize} min="0.5" max="1.5" step="0.1" />
+			<div class="config-submenu" transition:slide>
+				<span transition:fade>• Text size <span class="lenght">x{config.textSize || 1}</span></span>
+				<input
+					transition:fade
+					type="range"
+					bind:value={config.textSize}
+					min="0.5"
+					max="1.5"
+					step="0.1"
+				/>
 			</div>
 		{/if}
 

@@ -1,4 +1,6 @@
 <script>
+	import { fade, slide } from 'svelte/transition';
+
 	/**
 	 * @type {{ initial: boolean, thumbnail: string, channelLogo: string, title: string, channel: string, views: string, time: string, duration: string , isLive: boolean, isUpcoming: boolean, startDate: string, viewers: string }}
 	 */
@@ -23,7 +25,7 @@
 				? config.textSize
 				: 1};{config.rounding < 0 ? ` border-radius: 0 !important;` : ''}"
 		>
-			<div class="thumbnail" style="background-image: url({data?.thumbnail})">
+			<div class="thumbnail" style="background-image: url({data?.thumbnail});">
 				{#if data?.duration && config.displayDuration}
 					{#if data?.isLive}
 						<div class="duration live">EN DIRECT</div>
@@ -49,6 +51,7 @@
 							{#if config.displayChannel}
 								<span>{data?.channel}</span>
 							{/if}
+
 							{#if data?.isUpcoming}
 								<span>Planifier pour le {data?.startDate}</span>
 							{:else if data?.isLive}
@@ -162,6 +165,7 @@
 					font-size: calc(1rem * var(--text-size, 1));
 					line-height: calc(1.5rem * var(--text-size, 1));
 					font-weight: 400;
+					margin: 4px 0 0 0;
 
 					span {
 						display: block;
@@ -176,11 +180,12 @@
 					margin-top: 12px;
 					margin-right: 12px;
 					border-radius: 50%;
+					aspect-ratio: 1 / 1;
 				}
 
 				h3 {
 					font-size: calc(1.17rem * var(--text-size, 1));
-					margin: 12px 0 4px 0;
+					margin: 12px 0 0px 0;
 					text-overflow: ellipsis;
 				}
 			}

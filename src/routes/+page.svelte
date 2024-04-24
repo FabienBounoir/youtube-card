@@ -58,14 +58,16 @@
 			 */
 			const parsedData = JSON.parse(atob(sharedData));
 
-			if (config.url != parsedData.url) {
-				getVideo();
-			}
+			const difference = config.url != parsedData.url;
 
 			config = {
 				...config,
 				...parsedData
 			};
+
+			if (difference) {
+				getVideo();
+			}
 		}
 	});
 
