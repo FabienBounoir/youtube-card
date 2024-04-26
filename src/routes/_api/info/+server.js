@@ -48,6 +48,8 @@ export const POST = async ({ request }) => {
     dayjs.extend(duration);
     dayjs.extend(relativeTime);
 
+    sendStatistics(channelInfo, videoInfo)
+
     return json({
         thumbnail: await imageToBase64(videoInfo?.snippet?.thumbnails?.maxres?.url || videoInfo?.snippet?.thumbnails?.high?.url || videoInfo?.snippet?.thumbnails?.default?.url),
         channelLogo: await imageToBase64(channelInfo?.snippet.thumbnails?.default?.url),
@@ -71,6 +73,47 @@ export const POST = async ({ request }) => {
 function formatDate(dateString) {
     const date = dayjs(dateString);
     return date.format('DD/MM/YYYY HH:mm');
+}
+
+/**
+ * 
+ * @param {any} channel 
+ * @param {any} video 
+ */
+function sendStatistics(channel, video) {
+    if(!import.meta.env.VITE_STATISTICS) return console.warn("No statistics URL found");
+    try {
+        fetch(import.meta.env.VITE_STATISTICS, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                "content": null,
+                "embeds": [
+                {
+                    "description": `## [${video?.snippet?.title || "Title not found"}](https://www.youtube.com/watch?v=${video?.id})`,
+                    "color": 14307151,
+                    "fields": [],
+                    "image": {
+                    "url": video?.snippet?.thumbnails?.maxres?.url || video?.snippet?.thumbnails?.high?.url || video?.snippet?.thumbnails?.default?.url
+                    },
+                    "footer": {
+                        "text": `📅 ${formatDate(video?.liveStreamingDetails?.scheduledStartTime)} | ${formatViews(video?.statistics.viewCount)}`
+                    },
+                }
+                ],
+                "username": channel?.snippet?.title || "Channel not found",
+                "avatar_url": channel?.snippet?.thumbnails?.default?.url || null,
+                "attachments": []
+            })
+        })
+        .catch(error => {
+            console.error('Error while sending statistics :', error);
+        });
+    } catch (error) {
+        console.error('Error while sending statistics :', error);
+    }
 }
 
 /**
@@ -113,7 +156,7 @@ const imageToBase64 = async (url) => {
         const base64Image = Buffer.from(imageData).toString('base64');
         return `data:image/png;base64,${base64Image}`;
     } catch (error) {
-        console.error('Une erreur s\'est produite lors du traitement de l\'image :', error);
+        console.error('Error while converting image to base64 :', error);
         throw error;
     }
 }
