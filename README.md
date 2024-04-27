@@ -1,8 +1,10 @@
 # Youtube Card Generator 
 
-Youtube Card Generator is a simple tool to generate a youtube card from a youtube video URL, Idea proposed by BastiUi and challenged by Benjamin Code.
+Youtube Card Generator is a simple tool to generate a youtube card from a youtube video URL, Idea proposed by [BastiUi](https://twitter.com/BastiUi/status/1780610137989804492) and challenged by [Benjamin Code](https://www.youtube.com/watch?v=f7_CHu0ADhM).
 
 <img src="/static/banner.png" alt="Youtube Card Generator" />
+
+<iframe 
 
 ## Developing
 
