@@ -4,7 +4,7 @@ Youtube Card Generator is a simple tool to generate a youtube card from a youtub
 
 <img src="/static/banner.png" alt="Youtube Card Generator" />
 
-<iframe src="[http://kidcreatorsteam.com](https://www.youtube.com/watch?v=f7_CHu0ADhM)"></iframe>
+<iframe src="https://www.youtube.com/watch?v=f7_CHu0ADhM"></iframe>
 
 ## Developing
 
