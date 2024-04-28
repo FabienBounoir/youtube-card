@@ -1,5 +1,6 @@
 <script>
-	import { fade, slide } from 'svelte/transition';
+	import { cubicOut } from 'svelte/easing';
+	import { blur, fade, slide } from 'svelte/transition';
 
 	/**
 	 * @type {{ initial: boolean, thumbnail: string, channelLogo: string, title: string, channel: string, views: string, time: string, duration: string , isLive: boolean, isUpcoming: boolean, startDate: string, viewers: string }}
@@ -18,6 +19,13 @@
 </script>
 
 <div class="design">
+	{#key data?.thumbnail}
+		<div
+			transition:blur={{ duration: 400, easing: cubicOut }}
+			class="background"
+			style="background-image: url({data?.thumbnail});"
+		></div>
+	{/key}
 	{#if data}
 		<div
 			class="youtube-card {config.theme} {loading ? 'loading' : ''}"
@@ -70,7 +78,25 @@
 </div>
 
 <style lang="scss">
+	.background {
+		position: absolute;
+
+		z-index: -1;
+		top: 0%;
+		left: 0%;
+		right: 0%;
+		bottom: 0%;
+		border-radius: 0.75rem;
+		background-size: cover;
+		background-position: center;
+		background-repeat: no-repeat;
+		opacity: 0.5;
+
+		filter: blur(2em);
+	}
+
 	.design {
+		position: relative;
 		display: flex;
 		flex-direction: column;
 
