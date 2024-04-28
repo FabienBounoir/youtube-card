@@ -9,7 +9,7 @@
 	let data = null;
 
 	/**
-	 * @type {{ initial: boolean, displayChannel: boolean, duration: number, displayMeta: boolean, theme: string, size: number, displayDuration: boolean, url: string }}
+	 * @type {{ initial: boolean, displayChannel: boolean, duration: number, displayMeta: boolean, theme: string, size: number, displayDuration: boolean, url?: string, advanced: boolean, rounding: number, textSize: number, spacing: number }}
 	 */
 	let config = {
 		initial: true,
@@ -18,7 +18,11 @@
 		displayMeta: true,
 		theme: 'white',
 		size: 2,
-		displayDuration: true
+		displayDuration: true,
+		advanced: false,
+		rounding: 1,
+		textSize: 1,
+		spacing: 1
 	};
 
 	let loading = false;

@@ -7,7 +7,7 @@
 	export let data;
 
 	/**
-	 * @type {{ initial: boolean, displayChannel: boolean, duration: number, displayMeta: boolean, theme: string, displayDuration: boolean, rounding: number, textSize: number, advanced: boolean }}
+	 * @type {{ initial: boolean, displayChannel: boolean, duration: number, displayMeta: boolean, theme: string, displayDuration: boolean, rounding: number, textSize: number, advanced: boolean, spacing: number }}
 	 */
 	export let config;
 
@@ -23,7 +23,9 @@
 			class="youtube-card {config.theme} {loading ? 'loading' : ''}"
 			style="--rounding: {config.advanced ? config.rounding : 1}; --text-size: {config.advanced
 				? config.textSize
-				: 1};{config.rounding < 0 ? ` border-radius: 0 !important;` : ''}"
+				: 1};{config.rounding < 0
+				? ` border-radius: 0 !important;`
+				: ''}; --spacing: {config.advanced ? config.spacing : 1};"
 		>
 			<div class="thumbnail" style="background-image: url({data?.thumbnail});">
 				{#if data?.duration && config.displayDuration}
@@ -86,8 +88,8 @@
 			transition: all 0.3s;
 			max-width: min(100%, 400px);
 			background-color: white;
-			border-radius: calc(((0.5rem * var(--rounding, 1)) + 1rem));
-			padding: 1rem;
+			border-radius: calc(((0.5rem * var(--rounding, 1)) + calc(1rem * var(--spacing, 1))));
+			padding: calc(1rem * var(--spacing, 1));
 			min-width: min(100%, 350px);
 
 			&.loading {

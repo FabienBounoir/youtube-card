@@ -16,7 +16,7 @@
 	export let data;
 
 	/**
-	 * @type {{ initial: boolean, displayChannel: boolean, duration: number, displayMeta: boolean, theme: string, size: number, displayDuration: boolean, url: string, advanced: boolean, rounding: number, textSize: number }}
+	 * @type {{ initial: boolean, displayChannel: boolean, duration: number, displayMeta: boolean, theme: string, size: number, displayDuration: boolean, url: string, advanced: boolean, rounding: number, textSize: number, spacing: number }}
 	 */
 	export let config;
 
@@ -417,6 +417,18 @@
 					bind:value={config.textSize}
 					min="0.5"
 					max="1.5"
+					step="0.1"
+				/>
+			</div>
+
+			<div class="config-submenu" transition:slide>
+				<span transition:fade>• Spacing <span class="lenght">x{config.spacing || 1}</span></span>
+				<input
+					transition:fade
+					type="range"
+					bind:value={config.spacing}
+					min="0"
+					max="2"
 					step="0.1"
 				/>
 			</div>
