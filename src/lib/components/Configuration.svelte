@@ -141,6 +141,17 @@
 		});
 	};
 
+	const pasteFromClipboard = async () => {
+		try {
+			url = await navigator.clipboard.readText();
+			const inputElement = document.querySelector('input');
+			inputElement.value = url;
+		} catch (err) {
+			console.error('Failed to read clipboard contents: ', err);
+			alert('Unable to access clipboard. Please paste the URL manually.');
+		}
+	};
+
 	/**
 	 *
 	 * @param {string} dataUrl
@@ -171,9 +182,14 @@
 		<div class="input-container">
 			<input
 				bind:value={url}
-				placeholder="Paste youtube video URL"
+				placeholder="Paste YouTube video URL"
 				on:keyup={(e) => e.key === 'Enter' && getVideoData(url, true)}
 			/>
+			<button
+				on:click={pasteFromClipboard}
+			>
+				Paste
+			</button>
 		</div>
 
 		<div class="config-container">
