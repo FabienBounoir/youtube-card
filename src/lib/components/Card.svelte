@@ -36,6 +36,10 @@
 				: ''}; --spacing: {config.advanced ? config.spacing : 1};"
 		>
 			<div class="thumbnail" style="background-image: url({data?.thumbnail});">
+				{#if data?.thumbnailUrl}
+					<img src={data?.thumbnailUrl} alt="youtube thumbnail" />
+				{/if}
+
 				{#if data?.duration && config.displayDuration}
 					{#if data?.isLive}
 						<div class="duration live">EN DIRECT</div>

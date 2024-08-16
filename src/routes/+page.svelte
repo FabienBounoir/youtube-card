@@ -3,13 +3,16 @@
 	import Configuration from '$lib/components/Configuration.svelte';
 	import Card from '$lib/components/Card.svelte';
 
+	const regex =
+		/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+
 	/**
 	 * @type {{ initial: boolean, thumbnail: string, channelLogo: string, title: string, channel: string, views: string, time: string, duration: string }}
 	 */
 	let data = null;
 
 	/**
-	 * @type {{ initial: boolean, displayChannel: boolean, duration: number, displayMeta: boolean, theme: string, size: number, displayDuration: boolean, url?: string, advanced: boolean, rounding: number, textSize: number, spacing: number }}
+	 * @type {{ initial: boolean, displayChannel: boolean, duration: number, displayMeta: boolean, theme: string, size: number, displayDuration: boolean, url?: string, advanced: boolean, rounding: number, textSize: number, spacing: number, autoPaste: boolean }}
 	 */
 	let config = {
 		initial: true,
@@ -22,7 +25,8 @@
 		advanced: false,
 		rounding: 1,
 		textSize: 1,
-		spacing: 1
+		spacing: 1,
+		autoPaste: false
 	};
 
 	let loading = false;
@@ -104,8 +108,6 @@
 	 * @param url {string}
 	 */
 	const findVideoId = (url) => {
-		const regex =
-			/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
 		const match = url.match(regex);
 		return match ? match[1] : null;
 	};

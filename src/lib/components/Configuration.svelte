@@ -5,6 +5,9 @@
 	import Switch from './Switch.svelte';
 	import Tooltip from './Tooltip.svelte';
 
+	const regex =
+		/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+
 	/**
 	 * @type {string | null}
 	 */
@@ -16,7 +19,7 @@
 	export let data;
 
 	/**
-	 * @type {{ initial: boolean, displayChannel: boolean, duration: number, displayMeta: boolean, theme: string, size: number, displayDuration: boolean, url: string, advanced: boolean, rounding: number, textSize: number, spacing: number }}
+	 * @type {{ initial: boolean, displayChannel: boolean, duration: number, displayMeta: boolean, theme: string, size: number, displayDuration: boolean, url: string, advanced: boolean, rounding: number, textSize: number, spacing: number, autoPaste: boolean }}
 	 */
 	export let config;
 
@@ -162,6 +165,26 @@
 		return blob;
 	};
 
+	const checkClipboard = () => {
+		setInterval(() => {
+			if (config.autoPaste) {
+				try {
+					navigator.clipboard.readText().then((clipboardElement) => {
+						if (
+							clipboardElement &&
+							clipboardElement != config.url &&
+							clipboardElement.match(regex)
+						) {
+							url = clipboardElement;
+						}
+					});
+				} catch (e) {}
+			}
+		}, 200);
+	};
+
+	checkClipboard();
+
 	$: url && getVideoData(url, false);
 </script>
 
@@ -174,6 +197,58 @@
 				placeholder="Paste youtube video URL"
 				on:keyup={(e) => e.key === 'Enter' && getVideoData(url, true)}
 			/>
+
+			<Tooltip
+				title={config?.autoPaste ? 'Disable auto-update link' : 'Enable auto-update link'}
+				disabledOnMobile={true}
+			>
+				<button
+					class={config?.autoPaste ? 'activate' : ''}
+					on:click={() => (config.autoPaste = !config.autoPaste)}
+				>
+					{#if config?.autoPaste}
+						<svg width="20px" height="20px" viewBox="0 0 24 24" fill="none">
+							<path
+								d="M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5V7H9V5Z"
+								stroke="#FFFFFF"
+								stroke-width="1.5"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+							/>
+							<path
+								d="M9 5H7C5.89543 5 5 5.89543 5 7V19C5 20.1046 5.89543 21 7 21H12H17C18.1046 21 19 20.1046 19 19V7C19 5.89543 18.1046 5 17 5H15"
+								stroke="#FFFFFF"
+								stroke-width="1.5"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+							/>
+						</svg>
+					{:else}
+						<svg
+							width="20px"
+							height="20px"
+							viewBox="0 0 24 24"
+							fill="none"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<path
+								d="M3 3L21 21"
+								stroke="#FFFFFF"
+								stroke-width="1.5"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+							/>
+							<path
+								fill-rule="evenodd"
+								clip-rule="evenodd"
+								stroke-width="1.5"
+								d="M5.49186 4.40607C4.59965 4.92594 4 5.89294 4 7V19C4 20.6569 5.34315 22 7 22H12H17C18.6569 22 20 20.6569 20 19V18.9142L18 16.9142V19C18 19.5523 17.5523 20 17 20H12H7C6.44772 20 6 19.5523 6 19V7C6 6.44772 6.44772 6 7 6H7.08579L5.49186 4.40607ZM8 6.91421V7C8 7.55228 8.44772 8 9 8H9.08579L8 6.91421ZM18 14.0858V7C18 6.44772 17.5523 6 17 6H16V7C16 7.55228 15.5523 8 15 8H11.9142L7.91421 4H8.17071C8.58254 2.83481 9.69378 2 11 2H13C14.3062 2 15.4175 2.83481 15.8293 4H17C18.6569 4 20 5.34315 20 7V16.0858L18 14.0858ZM14 5V6H10V5C10 4.44772 10.4477 4 11 4H13C13.5523 4 14 4.44772 14 5Z"
+								fill="#FFFFFF"
+							/>
+						</svg>
+					{/if}
+				</button>
+			</Tooltip>
 		</div>
 
 		<div class="config-container">
@@ -694,6 +769,7 @@
 			gap: 0.5rem;
 
 			padding: 0.5rem 1rem;
+			min-height: 32px;
 
 			outline: 2px solid transparent;
 			outline-offset: 2px;
@@ -703,7 +779,7 @@
 			margin: 0.5rem 1rem;
 			padding: 6px 0.35rem;
 
-			border-radius: 0.5rem;
+			border-radius: 0.375rem;
 
 			input {
 				color: #f0f0f0;
@@ -716,12 +792,31 @@
 			}
 
 			button {
-				text-wrap: nowrap;
-				padding: 0.25rem 8px;
-				background-image: linear-gradient(to bottom right, #ff0000, #aa0000);
+				display: flex;
+				padding: 0.3rem 0.3rem;
+				background-color: rgb(23 23 23);
+				color: #f0f0f0;
+				border: 1px solid rgb(38 38 38);
 				border-radius: 0.375rem;
-				border: 0px solid transparent;
 				cursor: pointer;
+				transition: background-color 0.2s;
+
+				&:hover {
+					background-color: rgb(44, 44, 44);
+				}
+
+				svg {
+					width: 1.3rem;
+					height: 1.3rem;
+				}
+
+				&:hover svg {
+					animation: scale 0.6s ease infinite alternate;
+				}
+			}
+
+			.activate {
+				background-color: rgb(38 38 38);
 			}
 		}
 	}
@@ -729,7 +824,7 @@
 	@media screen and (max-width: 700px) {
 		.configuration {
 			width: 100%;
-			margin: 0 2rem;
+			margin: 0 1rem 4rem 1rem;
 		}
 	}
 </style>

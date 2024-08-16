@@ -1,5 +1,6 @@
 <script>
 	export let title = '';
+	export let disabledOnMobile = false;
 	let isHovered = false;
 	let x;
 	let y;
@@ -18,11 +19,16 @@
 	}
 </script>
 
-<div on:mouseover={mouseOver} on:mouseleave={mouseLeave} on:mousemove={mouseMove}>
+<div
+	on:mouseover={mouseOver}
+	on:mouseleave={mouseLeave}
+	on:mousemove={mouseMove}
+	class={disabledOnMobile ? 'phoneRestricted' : ''}
+>
 	<slot />
 </div>
 
-{#if isHovered}
+{#if isHovered && window.innerWidth > 768}
 	<div style="top: {y}px; left: {x}px;" class="tooltip">{title}</div>
 {/if}
 
@@ -33,5 +39,11 @@
 		border-radius: 4px;
 		padding: 4px;
 		position: absolute;
+	}
+
+	@media (hover: none) and (pointer: coarse) {
+		.phoneRestricted {
+			display: none;
+		}
 	}
 </style>
