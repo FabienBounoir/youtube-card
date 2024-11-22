@@ -141,11 +141,15 @@
 
 	@media (max-width: 768px) {
 		.buymeacoffee {
-			margin: 1rem;
+			display: none;
 		}
 
 		header {
 			margin: 1rem;
+
+			p {
+				display: none;
+			}
 		}
 	}
 </style>

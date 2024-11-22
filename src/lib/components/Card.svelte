@@ -19,11 +19,11 @@
 </script>
 
 <div class="design">
-	{#key data?.thumbnail}
+	{#key data?.thumbnailUrl}
 		<div
 			transition:blur={{ duration: 400, easing: cubicOut }}
 			class="background"
-			style="background-image: url({data?.thumbnail});"
+			style="background-image: url({data?.thumbnailUrl});"
 		></div>
 	{/key}
 	{#if data}

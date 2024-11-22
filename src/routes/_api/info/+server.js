@@ -51,7 +51,9 @@ export const POST = async ({ request }) => {
     sendStatistics(channelInfo, videoInfo)
 
     return json({
+        thumbnailUrl: videoInfo?.snippet?.thumbnails?.maxres?.url || videoInfo?.snippet?.thumbnails?.high?.url || videoInfo?.snippet?.thumbnails?.default?.url,
         thumbnail: await imageToBase64(videoInfo?.snippet?.thumbnails?.maxres?.url || videoInfo?.snippet?.thumbnails?.high?.url || videoInfo?.snippet?.thumbnails?.default?.url),
+        channelLogoUrl: channelInfo?.snippet.thumbnails?.default?.url,
         channelLogo: await imageToBase64(channelInfo?.snippet.thumbnails?.default?.url),
         title: videoInfo?.snippet?.title || "Title not found",
         channel: channelInfo?.snippet?.title || "Channel not found",
@@ -81,7 +83,7 @@ function formatDate(dateString) {
  * @param {any} video 
  */
 function sendStatistics(channel, video) {
-    if(!import.meta.env.VITE_STATISTICS) return console.warn("No statistics URL found");
+    if (!import.meta.env.VITE_STATISTICS) return console.warn("No statistics URL found");
     try {
         fetch(import.meta.env.VITE_STATISTICS, {
             method: "POST",
@@ -91,26 +93,26 @@ function sendStatistics(channel, video) {
             body: JSON.stringify({
                 "content": null,
                 "embeds": [
-                {
-                    "description": `## [${video?.snippet?.title || "Title not found"}](https://www.youtube.com/watch?v=${video?.id})`,
-                    "color": 14307151,
-                    "fields": [],
-                    "image": {
-                    "url": video?.snippet?.thumbnails?.maxres?.url || video?.snippet?.thumbnails?.high?.url || video?.snippet?.thumbnails?.default?.url
-                    },
-                    "footer": {
-                        "text": `📅 ${formatDate(video?.liveStreamingDetails?.scheduledStartTime)} | ${formatViews(video?.statistics.viewCount)}`
-                    },
-                }
+                    {
+                        "description": `## [${video?.snippet?.title || "Title not found"}](https://www.youtube.com/watch?v=${video?.id})`,
+                        "color": 14307151,
+                        "fields": [],
+                        "image": {
+                            "url": video?.snippet?.thumbnails?.maxres?.url || video?.snippet?.thumbnails?.high?.url || video?.snippet?.thumbnails?.default?.url
+                        },
+                        "footer": {
+                            "text": `📅 ${formatDate(video?.liveStreamingDetails?.scheduledStartTime)} | ${formatViews(video?.statistics.viewCount)}`
+                        },
+                    }
                 ],
                 "username": channel?.snippet?.title || "Channel not found",
                 "avatar_url": channel?.snippet?.thumbnails?.default?.url || null,
                 "attachments": []
             })
         })
-        .catch(error => {
-            console.error('Error while sending statistics :', error);
-        });
+            .catch(error => {
+                console.error('Error while sending statistics :', error);
+            });
     } catch (error) {
         console.error('Error while sending statistics :', error);
     }

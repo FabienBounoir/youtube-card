@@ -1,9 +1,11 @@
 <script>
 	import { snacks } from '$lib/stores/snacks';
 	import { toPng } from 'html-to-image';
+	import { domToBlob, domToPng } from 'modern-screenshot';
 	import { fade, scale, slide } from 'svelte/transition';
 	import Switch from './Switch.svelte';
 	import Tooltip from './Tooltip.svelte';
+	import { onMount } from 'svelte';
 
 	const regex =
 		/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
@@ -12,6 +14,8 @@
 	 * @type {string | null}
 	 */
 	let action = null;
+
+	let clipboardCopyEnabled = false;
 
 	/**
 	 * @type {{ initial: boolean, thumbnail: string, channelLogo: string, title: string, channel: string, views: string, time: string, duration: string }}
@@ -91,9 +95,8 @@
 		 * @type {HTMLElement | any}
 		 */
 		const node = document.querySelector('.youtube-card');
-		const dataUrl = await toPng(node, {
-			canvasWidth: node.offsetWidth * (config.size || 1),
-			canvasHeight: node.offsetHeight * (config.size || 1),
+		const dataUrl = await domToPng(node, {
+			scale: 1 + (config.size || 1),
 			quality: 1
 		});
 		const a = document.createElement('a');
@@ -117,31 +120,49 @@
 	const copyToClipboard = (e) => {
 		waitingGeneration = true;
 		e.target.innerText = 'Generate';
-		action = 'copy';
+		action = 'Copy';
 
 		/**
 		 * @type {HTMLElement | any}
 		 */
 		const node = document.querySelector('.youtube-card');
-		toPng(node, {
-			canvasWidth: node.offsetWidth * (config.size || 1),
-			canvasHeight: node.offsetHeight * (config.size || 1),
+		domToBlob(node, {
+			scale: 1 + (config.size || 1),
 			quality: 1
-		}).then(async (dataUrl) => {
-			await navigator.clipboard.write([
-				new ClipboardItem({
-					'image/png': dataUrlToBlob(dataUrl)
-				})
-			]);
+		})
+			.then(async (blob) => {
+				try {
+					// Création d'un ClipboardItem avec le Blob
+					const clipboardItem = new ClipboardItem({ 'image/png': blob });
 
-			waitingGeneration = false;
-			e.target.innerText = 'Copied!';
-			action = null;
+					// Copie dans le presse-papier
+					await navigator.clipboard.write([clipboardItem]);
 
-			setTimeout(() => {
-				e.target.innerText = 'Copy';
-			}, 2000);
-		});
+					console.log('Image copiée avec succès !');
+
+					waitingGeneration = false;
+					e.target.innerText = 'Copied!';
+					action = null;
+				} catch (error) {
+					console.error('Erreur lors de la copie dans le presse-papier :', error);
+					waitingGeneration = false;
+					e.target.innerText = 'Error!';
+					action = null;
+				}
+
+				setTimeout(() => {
+					e.target.innerText = 'Copy';
+				}, 2000);
+			})
+			.catch((e) => {
+				waitingGeneration = false;
+				e.target.innerText = 'Error!';
+				action = null;
+
+				setTimeout(() => {
+					e.target.innerText = 'Copy';
+				}, 5000);
+			});
 	};
 
 	/**
@@ -184,6 +205,12 @@
 	};
 
 	checkClipboard();
+
+	onMount(() => {
+		if (typeof ClipboardItem != 'undefined') {
+			clipboardCopyEnabled = true;
+		}
+	});
 
 	$: url && getVideoData(url, false);
 </script>
@@ -460,7 +487,7 @@
 
 		<div class="config-container">
 			<span>Size <span class="lenght">x{config.size || 1}</span></span>
-			<input type="range" bind:value={config.size} min="1" max="10" step="1" />
+			<input type="range" bind:value={config.size} min="1" max="4" step="1" />
 		</div>
 
 		<div class="config-container">
@@ -510,13 +537,15 @@
 		{/if}
 
 		<div class="button-container">
-			<button
-				class={action == 'copy' ? 'loading' : ''}
-				on:click={copyToClipboard}
-				disabled={waitingGeneration}
-			>
-				Copy
-			</button>
+			{#if clipboardCopyEnabled}
+				<button
+					class={action == 'copy' ? 'loading' : ''}
+					on:click={copyToClipboard}
+					disabled={waitingGeneration}
+				>
+					Copy
+				</button>
+			{/if}
 
 			<button
 				on:click={download}
