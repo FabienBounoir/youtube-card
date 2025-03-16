@@ -127,6 +127,7 @@
 			span {
 				font-weight: bold;
 				color: black;
+				font-size: calc(1rem * var(--text-size, 1));
 			}
 		}
 
