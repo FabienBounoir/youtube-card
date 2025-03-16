@@ -1,6 +1,6 @@
 {
 	"name": "youtube-card",
-	"version": "0.0.1",
+	"version": "1.1.0",
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",
@@ -33,6 +33,7 @@
 		"@vercel/analytics": "^1.2.2",
 		"dayjs": "^1.11.10",
 		"html-to-image": "^1.11.11",
-		"modern-screenshot": "^4.5.4"
+		"modern-screenshot": "^4.5.4",
+		"svelte-i18n": "^4.0.1"
 	}
 }

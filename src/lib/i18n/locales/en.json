@@ -1,0 +1,35 @@
+{
+    "title": "Youtube Card Generator",
+    "description": "<em>Youtube Card Generator</em> is a simple tool to generate a youtube card from a youtube video URL, Idea proposed by <a style=\"color: var(--accent-color); text-decoration: none; font-weight: bold;\" href=\"https://www.youtube.com/@BastiUi\">BastiUi</a> and challenged by <a style=\"color: var(--accent-color); text-decoration: none; font-weight: bold;\" href=\"https://www.youtube.com/@BenjaminCode\">Benjamin Code</a>.",
+    "buy_me_a_coffee": "<a href=\"https://www.buymeacoffee.com/bouns\" target=\"_blank\">Buy me a coffee</a>",
+    "configuration": {
+        "options": "Card Options",
+        "paste_youtube_url": "Paste Youtube Video URL",
+        "disable_auto_update": "Disable auto-update link",
+        "enable_auto_update": "Enable auto-update link",
+        "style": "Style",
+        "display": "Display",
+        "display_channel": "Channel",
+        "display_statistics": "Statistics",
+        "display_duration": "Duration",
+        "progress": "Progress",
+        "theme": "Theme",
+        "size": "Size",
+        "advanced": "Advanced Options",
+        "rounding": "Rounding",
+        "text_size": "Text Size",
+        "spacing": "Spacing",
+        "copy": "Copy",
+        "download": "Download",
+        "information": "Project by <a style=\"color: var(--accent-color); text-decoration: none; font-weight: bold;\" href=\"https: //bento.me/fabienbounoir\">@Bouns</a>, source code available on <a style=\"color: var(--accent-color); text-decoration: none; font-weight: bold;\" href=\"https://github.com/FabienBounoir/youtube-card\">Github</a>.",
+        "invalid_url": "Invalid Youtube Video URL",
+        "error_when_fetching": "Error when fetching Youtube Video"
+    },
+    "cards": {
+        "live": "LIVE",
+        "upcoming": "UPCOMING",
+        "planned_for": "Scheduled for {date}",
+        "viewers": "{viewers} viewers",
+        "views_time": "{views} views"
+    }
+}

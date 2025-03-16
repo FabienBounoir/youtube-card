@@ -6,6 +6,7 @@
 	import Switch from './Switch.svelte';
 	import Tooltip from './Tooltip.svelte';
 	import { onMount } from 'svelte';
+	import { _ } from 'svelte-i18n';
 
 	const regex =
 		/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
@@ -23,7 +24,7 @@
 	export let data;
 
 	/**
-	 * @type {{ initial: boolean, displayChannel: boolean, duration: number, displayMeta: boolean, theme: string, size: number, displayDuration: boolean, url: string, advanced: boolean, rounding: number, textSize: number, spacing: number, autoPaste: boolean }}
+	 * @type {{ style: string, initial: boolean, displayChannel: boolean, duration: number, displayMeta: boolean, theme: string, size: number, displayDuration: boolean, url: string, advanced: boolean, rounding: number, textSize: number, spacing: number, autoPaste: boolean }}
 	 */
 	export let config;
 
@@ -54,7 +55,7 @@
 	const getVideoData = async (url, notif) => {
 		const videoId = findVideoId(url);
 		if (!videoId) {
-			if (notif) snacks.error('Invalid youtube video URL');
+			if (notif) snacks.error($_('configuration.invalid_url'));
 			return;
 		}
 
@@ -65,11 +66,11 @@
 				headers: {
 					'Content-Type': 'application/json'
 				},
-				body: JSON.stringify({ videoId })
+				body: JSON.stringify({ videoId, language: navigator.language })
 			});
 
 			if (response.status !== 200) {
-				if (notif) snacks.error('An error occured while fetching the video data');
+				if (notif) snacks.error($_('configuration.error_when_fetching'));
 				return;
 			}
 
@@ -78,7 +79,7 @@
 			loading = false;
 		} catch (error) {
 			loading = false;
-			if (notif) snacks.error('An error occured while fetching the video data');
+			if (notif) snacks.error($_('configuration.error_when_fetching'));
 		}
 	};
 
@@ -217,16 +218,18 @@
 
 <div class="configuration">
 	<div class="config">
-		<h1>Card options</h1>
+		<h1>{$_('configuration.options')}</h1>
 		<div class="input-container">
 			<input
 				bind:value={url}
-				placeholder="Paste youtube video URL"
+				placeholder={$_('configuration.paste_youtube_url')}
 				on:keyup={(e) => e.key === 'Enter' && getVideoData(url, true)}
 			/>
 
 			<Tooltip
-				title={config?.autoPaste ? 'Disable auto-update link' : 'Enable auto-update link'}
+				title={config?.autoPaste
+					? $_('configuration.disable_auto_update')
+					: $_('configuration.enable_auto_update')}
 				disabledOnMobile={true}
 			>
 				<button
@@ -279,10 +282,48 @@
 		</div>
 
 		<div class="config-container">
-			<span>Display</span>
+			<span>{$_('configuration.style')}</span>
+
+			<div class="theme-button">
+				<button
+					class="computer {config.style == 'computer' ? 'select' : ''}"
+					on:click={() => (config.style = 'computer')}
+				>
+					<svg
+						width="15"
+						height="15"
+						viewBox="0 0 15 15"
+						fill="none"
+						xmlns="http://www.w3.org/2000/svg"
+					>
+						<rect x="1" y="1" width="13" height="8" rx="1" fill="#F0F0F0" />
+						<rect x="1" y="10" width="12" height="2" rx="1" fill="#727272" />
+						<rect x="1" y="13" width="10" height="1" rx="0.5" fill="#727272" />
+					</svg>
+				</button>
+				<button
+					class="mobile {config.style == 'mobile' ? 'select' : ''}"
+					on:click={() => (config.style = 'mobile')}
+					><svg
+						width="18"
+						height="9"
+						viewBox="0 0 18 9"
+						fill="none"
+						xmlns="http://www.w3.org/2000/svg"
+					>
+						<rect y="2" width="8" height="5" rx="1" fill="#F0F0F0" />
+						<rect x="9" y="2" width="9" height="2" rx="1" fill="#727272" />
+						<rect x="9" y="5" width="7" height="2" rx="1" fill="#727272" />
+					</svg>
+				</button>
+			</div>
+		</div>
+
+		<div class="config-container">
+			<span>{$_('configuration.display')}</span>
 
 			<div class="display-config-button">
-				<Tooltip title="Channel">
+				<Tooltip title={$_('configuration.display_channel')}>
 					<button
 						class={config.displayChannel ? 'activate displaybutton' : 'displaybutton'}
 						on:click={() => (config.displayChannel = !config.displayChannel)}
@@ -321,7 +362,7 @@
 					</button>
 				</Tooltip>
 
-				<Tooltip title="Statistics">
+				<Tooltip title={$_('configuration.display_statistics')}>
 					<button
 						class={config.displayMeta ? 'activate displaybutton' : 'displaybutton'}
 						on:click={() => (config.displayMeta = !config.displayMeta)}
@@ -368,7 +409,7 @@
 					</button>
 				</Tooltip>
 
-				<Tooltip title="Duration">
+				<Tooltip title={$_('configuration.display_duration')}>
 					<button
 						class={config.displayDuration ? 'activate displaybutton' : 'displaybutton'}
 						on:click={() => (config.displayDuration = !config.displayDuration)}
@@ -403,13 +444,14 @@
 
 		<div class="config-container">
 			<span
-				>Progress {#if config.duration > 0}<span class="lenght">{config.duration}%</span>{/if}</span
+				>{$_('configuration.progress')}
+				{#if config.duration > 0}<span class="lenght">{config.duration}%</span>{/if}</span
 			>
 			<input type="range" bind:value={config.duration} min="0" max="100" />
 		</div>
 
 		<div class="config-container">
-			<span>Theme</span>
+			<span>{$_('configuration.theme')}</span>
 
 			<div class="theme-button">
 				<button
@@ -486,21 +528,20 @@
 		</div>
 
 		<div class="config-container">
-			<span>Size <span class="lenght">x{config.size || 1}</span></span>
+			<span>{$_('configuration.size')} <span class="lenght">x{config.size || 1}</span></span>
 			<input type="range" bind:value={config.size} min="1" max="4" step="1" />
 		</div>
 
 		<div class="config-container">
-			<span>Advance configuration</span>
+			<span>{$_('configuration.advanced')}</span>
 			<Switch bind:value={config.advanced} />
 		</div>
 
 		{#if config.advanced}
 			<div class="config-submenu" transition:slide>
 				<span transition:fade
-					>• Rounding <span class="lenght"
-						>x{config.rounding < 0 ? '-1' : config.rounding || 1}</span
-					></span
+					>• {$_('configuration.rounding')}
+					<span class="lenght">x{config.rounding < 0 ? '-1' : config.rounding || 1}</span></span
 				>
 				<input
 					transition:fade
@@ -512,7 +553,10 @@
 				/>
 			</div>
 			<div class="config-submenu" transition:slide>
-				<span transition:fade>• Text size <span class="lenght">x{config.textSize || 1}</span></span>
+				<span transition:fade
+					>• {$_('configuration.text_size')}
+					<span class="lenght">x{config.textSize || 1}</span></span
+				>
 				<input
 					transition:fade
 					type="range"
@@ -524,7 +568,9 @@
 			</div>
 
 			<div class="config-submenu" transition:slide>
-				<span transition:fade>• Spacing <span class="lenght">x{config.spacing || 1}</span></span>
+				<span transition:fade
+					>• {$_('configuration.spacing')} <span class="lenght">x{config.spacing || 1}</span></span
+				>
 				<input
 					transition:fade
 					type="range"
@@ -543,7 +589,7 @@
 					on:click={copyToClipboard}
 					disabled={waitingGeneration}
 				>
-					Copy
+					{$_('configuration.copy')}
 				</button>
 			{/if}
 
@@ -552,7 +598,7 @@
 				disabled={waitingGeneration}
 				class={action == 'download' ? 'loading' : ''}
 			>
-				Download
+				{$_('configuration.download')}
 			</button>
 		</div>
 	</div>
@@ -658,6 +704,27 @@
 			border-right: 0;
 			border-top-right-radius: 0;
 			border-bottom-right-radius: 0;
+		}
+
+		.mobile {
+			border-left: 0;
+			border-top-left-radius: 0;
+			border-bottom-left-radius: 0;
+			border-left: 1px solid rgb(38 38 38);
+
+			&:hover svg {
+				animation: scale 0.6s ease infinite alternate;
+			}
+		}
+
+		.computer {
+			border-right: 0;
+			border-top-right-radius: 0;
+			border-bottom-right-radius: 0;
+
+			&:hover svg {
+				animation: scale 0.6s ease infinite alternate;
+			}
 		}
 
 		.light-theme:hover {

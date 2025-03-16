@@ -1,0 +1,35 @@
+{
+    "title": "Générateur de Carte Youtube",
+    "description": "<em>Générateur de Carte Youtube</em> est un outil simple permettant de générer une carte Youtube à partir d'une URL de vidéo Youtube, idée proposée par <a style=\"color: var(--accent-color); text-decoration: none; font-weight: bold;\" href=\"https://www.youtube.com/@BastiUi\">BastiUi</a> et mise au défi par <a style=\"color: var(--accent-color); text-decoration: none; font-weight: bold;\" href=\"https://www.youtube.com/@BenjaminCode\">Benjamin Code</a>.",
+    "buy_me_a_coffee": "<a href=\"https://www.buymeacoffee.com/bouns\" target=\"_blank\">Offrez-moi un café</a>",
+    "configuration": {
+        "options": "Options de la Carte",
+        "paste_youtube_url": "Coller l'URL de la vidéo Youtube",
+        "disable_auto_update": "Désactiver la mise à jour automatique du lien",
+        "enable_auto_update": "Activer la mise à jour automatique du lien",
+        "style": "Style",
+        "display": "Affichage",
+        "display_channel": "Chaîne",
+        "display_statistics": "Statistiques",
+        "display_duration": "Durée",
+        "progress": "Progression",
+        "theme": "Thème",
+        "size": "Taille",
+        "advanced": "Options Avancées",
+        "rounding": "Arrondi",
+        "text_size": "Taille du Texte",
+        "spacing": "Espacement",
+        "copy": "Copier",
+        "download": "Télécharger",
+        "information": "Projet par <a style=\"color: var(--accent-color); text-decoration: none; font-weight: bold;\" href=\"https://bento.me/fabienbounoir\">@Bouns</a>, code source disponible sur <a style=\"color: var(--accent-color); text-decoration: none; font-weight: bold;\" href=\"https://github.com/FabienBounoir/youtube-card\">Github</a>.",
+        "invalid_url": "URL de vidéo Youtube invalide",
+        "error_when_fetching": "Erreur lors de la récupération de la vidéo Youtube"
+    },
+    "cards": {
+        "live": "EN DIRECT",
+        "upcoming": "À VENIR",
+        "planned_for": "Planifier pour le {date}",
+        "viewers": "{viewers} spectateurs",
+        "views_time": "{views} vues"
+    }
+}

@@ -12,7 +12,7 @@
 	let data = null;
 
 	/**
-	 * @type {{ initial: boolean, displayChannel: boolean, duration: number, displayMeta: boolean, theme: string, size: number, displayDuration: boolean, url?: string, advanced: boolean, rounding: number, textSize: number, spacing: number, autoPaste: boolean }}
+	 * @type {{ style: string, initial: boolean, displayChannel: boolean, duration: number, displayMeta: boolean, theme: string, size: number, displayDuration: boolean, url?: string, advanced: boolean, rounding: number, textSize: number, spacing: number, autoPaste: boolean }}
 	 */
 	let config = {
 		initial: true,
@@ -26,7 +26,8 @@
 		rounding: 1,
 		textSize: 1,
 		spacing: 1,
-		autoPaste: false
+		autoPaste: false,
+		style: 'computer'
 	};
 
 	let loading = false;
@@ -89,7 +90,7 @@
 				headers: {
 					'Content-Type': 'application/json'
 				},
-				body: JSON.stringify({ videoId })
+				body: JSON.stringify({ videoId, language: navigator.language })
 			});
 
 			if (response.status !== 200) {

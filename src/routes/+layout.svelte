@@ -2,6 +2,7 @@
 	import Snacks from '$lib/components/Snacks.svelte';
 	import '../app.scss';
 	import { onMount } from 'svelte';
+	import { _ } from 'svelte-i18n';
 	import { inject } from '@vercel/analytics';
 
 	onMount(() => {
@@ -11,12 +12,10 @@
 
 <div>
 	<header>
-		<h1>Youtube Card Generator</h1>
+		<h1>{$_('title')}</h1>
 
 		<p>
-			<em>Youtube Card Generator</em> is a simple tool to generate a youtube card from a youtube
-			video URL, Idea proposed by <a href="https://www.youtube.com/@BastiUi">BastiUi</a> and
-			challenged by <a href="https://www.youtube.com/@BenjaminCode">Benjamin Code</a>.
+			{@html $_('description')}
 		</p>
 	</header>
 

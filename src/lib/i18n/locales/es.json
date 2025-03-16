@@ -1,0 +1,28 @@
+{
+    "title": "Generador de Tarjetas de Youtube",
+    "description": "<em>Generador de Tarjetas de Youtube</em> es una herramienta sencilla para generar una tarjeta de Youtube a partir de una URL de video de Youtube, idea propuesta por <a style=\"color: var(--accent-color); text-decoration: none; font-weight: bold;\" href=\"https://www.youtube.com/@BastiUi\">BastiUi</a> y desafiada por <a style=\"color: var(--accent-color); text-decoration: none; font-weight: bold;\" href=\"https://www.youtube.com/@BenjaminCode\">Benjamin Code</a>.",
+    "buy_me_a_coffee": "<a href=\"https://www.buymeacoffee.com/bouns\" target=\"_blank\">Cómprame un café</a>",
+    "configuration": {
+        "options": "Opciones de Tarjeta",
+        "paste_youtube_url": "Pegar URL del video de Youtube",
+        "disable_auto_update": "Desactivar actualización automática del enlace",
+        "enable_auto_update": "Activar actualización automática del enlace",
+        "style": "Estilo",
+        "display": "Visualización",
+        "display_channel": "Canal",
+        "display_statistics": "Estadísticas",
+        "display_duration": "Duración",
+        "progress": "Progreso",
+        "theme": "Tema",
+        "size": "Tamaño",
+        "advanced": "Opciones Avanzadas",
+        "rounding": "Redondeo",
+        "text_size": "Tamaño del Texto",
+        "spacing": "Espaciado",
+        "copy": "Copiar",
+        "download": "Descargar",
+        "information": "Proyecto de <a style=\"color: var(--accent-color); text-decoration: none; font-weight: bold;\" href=\"https://bento.me/fabienbounoir\">@Bouns</a>, código fuente disponible en <a style=\"color: var(--accent-color); text-decoration: none; font-weight: bold;\" href=\"https://github.com/FabienBounoir/youtube-card\">Github</a>.",
+        "invalid_url": "URL de video de Youtube inválida",
+        "error_when_fetching": "Error al obtener el video de Youtube"
+    }
+}
