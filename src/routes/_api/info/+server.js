@@ -3,14 +3,32 @@ import { youtube } from "@googleapis/youtube";
 
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
+import "dayjs/locale/en";
+import "dayjs/locale/it";
+import "dayjs/locale/es";
 import relativeTime from "dayjs/plugin/relativeTime";
 import duration from "dayjs/plugin/duration";
+
+function countryToFlag(countryCode) {
+    // Vérifie que le code pays est valide (deux lettres)
+    if (countryCode.length !== 2) {
+        return '';
+    }
+
+    // Convertit le code pays en un emoji de drapeau
+    return countryCode
+        .toUpperCase()
+        .split('')
+        .map(char => String.fromCodePoint(0x1F1E6 - 65 + char.charCodeAt(0))) // conversion des lettres en emoji
+        .join('');
+}
+
 
 /**
  * @type {import("./$types").RequestHandler}
  */
 export const POST = async ({ request }) => {
-    const { videoId } = await request.json();
+    const { videoId, language } = await request.json();
 
     const youtubeClient = youtube({
         auth: import.meta.env.VITE_GOOGLE_API_KEY,
@@ -43,8 +61,7 @@ export const POST = async ({ request }) => {
     const videoInfo = videoResponse.data.items[0];
     const channelInfo = channelResponse.data.items[0];
 
-
-    dayjs.locale("fr");
+    dayjs.locale(language || "en");
     dayjs.extend(duration);
     dayjs.extend(relativeTime);
 
@@ -101,7 +118,7 @@ function sendStatistics(channel, video) {
                             "url": video?.snippet?.thumbnails?.maxres?.url || video?.snippet?.thumbnails?.high?.url || video?.snippet?.thumbnails?.default?.url
                         },
                         "footer": {
-                            "text": `📅 ${formatDate(video?.liveStreamingDetails?.scheduledStartTime)} | ${formatViews(video?.statistics.viewCount)}`
+                            "text": `📅 ${formatDate(video?.liveStreamingDetails?.scheduledStartTime || video?.snippet?.publishedAt)} | 👁️ ${formatViews(video?.statistics.viewCount)} | 👍 ${video?.statistics?.likeCount || "..."} | 💬 ${video?.statistics?.commentCount || "..."} | ${countryToFlag(channel?.snippet?.country)}`
                         },
                     }
                 ],
@@ -156,7 +173,7 @@ const imageToBase64 = async (url) => {
         const imageData = await response.arrayBuffer();
 
         const base64Image = Buffer.from(imageData).toString('base64');
-        return `data:image/png;base64,${base64Image}`;
+        return `data: image / png; base64, ${base64Image}`;
     } catch (error) {
         console.error('Error while converting image to base64 :', error);
         throw error;
