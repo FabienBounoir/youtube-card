@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://ytbcard.vercel.app/sitemap.xml
