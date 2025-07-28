@@ -19,12 +19,12 @@
 	let clipboardCopyEnabled = false;
 
 	/**
-	 * @type {{ initial: boolean, thumbnail: string, channelLogo: string, title: string, channel: string, views: string, time: string, duration: string }}
+	 * @type {{ initial: boolean, thumbnailUrl: string, thumbnail: string, channelLogoUrl: string, channelLogo: string, title: string, channel: string, views: string, time: string, duration: string, isLive: boolean, isUpcoming: boolean, startDate: string, viewers: string } | null}
 	 */
 	export let data;
 
 	/**
-	 * @type {{ style: string, initial: boolean, displayChannel: boolean, duration: number, displayMeta: boolean, theme: string, size: number, displayDuration: boolean, url: string, advanced: boolean, rounding: number, textSize: number, spacing: number, autoPaste: boolean }}
+	 * @type {{ style: string, initial: boolean, displayChannel: boolean, duration: number, displayMeta: boolean, theme: string, size: number, displayDuration: boolean, url: string, advanced: boolean, rounding: number, textSize: number, spacing: number, autoPaste: boolean, greenScreen: boolean }}
 	 */
 	export let config;
 
@@ -579,6 +579,11 @@
 					max="2"
 					step="0.1"
 				/>
+			</div>
+
+			<div class="config-submenu" transition:slide>
+				<span transition:fade>• {$_('configuration.green_screen')}</span>
+				<Switch bind:value={config.greenScreen} />
 			</div>
 		{/if}
 

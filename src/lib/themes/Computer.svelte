@@ -9,7 +9,7 @@
 	export let data;
 
 	/**
-	 * @type {{ initial: boolean, displayChannel: boolean, duration: number, displayMeta: boolean, theme: string, displayDuration: boolean, rounding: number, textSize: number, advanced: boolean, spacing: number }}
+	 * @type {{ initial: boolean, displayChannel: boolean, duration: number, displayMeta: boolean, theme: string, displayDuration: boolean, rounding: number, textSize: number, advanced: boolean, spacing: number, greenScreen: boolean }}
 	 */
 	export let config;
 
@@ -27,8 +27,13 @@
 		? config.spacing
 		: 1};"
 >
-	<div class="thumbnail" style="background-image: url({data?.thumbnail});">
-		{#if data?.thumbnailUrl}
+	<div
+		class="thumbnail"
+		style="background-image: url({data?.thumbnail}); {config.greenScreen
+			? 'background-color: #00FF00; background-image: none;'
+			: ''}"
+	>
+		{#if data?.thumbnailUrl && !config.greenScreen}
 			<img src={data?.thumbnailUrl} alt="youtube thumbnail" />
 		{/if}
 
