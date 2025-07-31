@@ -29,11 +29,11 @@
 >
 	<div
 		class="thumbnail"
-		style="background-image: url({data?.thumbnail}); {config.greenScreen
+		style="background-image: url({data?.thumbnail}); {config.advanced && config.greenScreen
 			? 'background-color: #00FF00; background-image: none;'
 			: ''}"
 	>
-		{#if data?.thumbnailUrl && !config.greenScreen}
+		{#if data?.thumbnailUrl && !(config.advanced && config.greenScreen)}
 			<img src={data?.thumbnailUrl} alt="youtube thumbnail" />
 		{/if}
 
