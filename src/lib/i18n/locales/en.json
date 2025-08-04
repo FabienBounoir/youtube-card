@@ -12,6 +12,7 @@
         "display_channel": "Channel",
         "display_statistics": "Statistics",
         "display_duration": "Duration",
+        "display_channel_name": "Channel name",
         "progress": "Progress",
         "theme": "Theme",
         "size": "Size",

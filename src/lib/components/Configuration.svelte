@@ -24,7 +24,7 @@
 	export let data;
 
 	/**
-	 * @type {{ style: string, initial: boolean, displayChannel: boolean, duration: number, displayMeta: boolean, theme: string, size: number, displayDuration: boolean, url: string, advanced: boolean, rounding: number, textSize: number, spacing: number, autoPaste: boolean, greenScreen: boolean }}
+	 * @type {{ style: string, initial: boolean, displayChannel: boolean, duration: number, displayMeta: boolean, theme: string, size: number, displayDuration: boolean, url: string, advanced: boolean, rounding: number, textSize: number, spacing: number, autoPaste: boolean, greenScreen: boolean, displayChannelName: boolean }}
 	 */
 	export let config;
 
@@ -90,12 +90,18 @@
 	const download = async (e) => {
 		waitingGeneration = true;
 		action = 'download';
-		e.target.innerText = 'Generate';
+		if (e.target) e.target.innerText = 'Generate';
 
 		/**
 		 * @type {HTMLElement | any}
 		 */
-		const node = document.querySelector('.youtube-card');
+		const selector =
+			config.style === 'likes'
+				? '.likes-card'
+				: config.style === 'subscribe'
+					? '.subscribe-card'
+					: '.youtube-card';
+		const node = document.querySelector(selector);
 		const dataUrl = await domToPng(node, {
 			scale: 1 + (config.size || 1),
 			quality: 1
@@ -106,11 +112,11 @@
 		a.click();
 
 		waitingGeneration = false;
-		e.target.innerText = 'Downloaded!';
+		if (e.target) e.target.innerText = 'Downloaded!';
 		action = null;
 
 		setTimeout(() => {
-			e.target.innerText = 'Download';
+			if (e.target) e.target.innerText = 'Download';
 		}, 2000);
 	};
 
@@ -120,13 +126,19 @@
 	 */
 	const copyToClipboard = (e) => {
 		waitingGeneration = true;
-		e.target.innerText = 'Generate';
+		if (e.target) e.target.innerText = 'Generate';
 		action = 'Copy';
 
 		/**
 		 * @type {HTMLElement | any}
 		 */
-		const node = document.querySelector('.youtube-card');
+		const selector =
+			config.style === 'likes'
+				? '.likes-card'
+				: config.style === 'subscribe'
+					? '.subscribe-card'
+					: '.youtube-card';
+		const node = document.querySelector(selector);
 		domToBlob(node, {
 			scale: 1 + (config.size || 1),
 			quality: 1
@@ -142,26 +154,26 @@
 					console.log('Image copiée avec succès !');
 
 					waitingGeneration = false;
-					e.target.innerText = 'Copied!';
+					if (e.target) e.target.innerText = 'Copied!';
 					action = null;
 				} catch (error) {
 					console.error('Erreur lors de la copie dans le presse-papier :', error);
 					waitingGeneration = false;
-					e.target.innerText = 'Error!';
+					if (e.target) e.target.innerText = 'Error!';
 					action = null;
 				}
 
 				setTimeout(() => {
-					e.target.innerText = 'Copy';
+					if (e.target) e.target.innerText = 'Copy';
 				}, 2000);
 			})
-			.catch((e) => {
+			.catch((error) => {
 				waitingGeneration = false;
-				e.target.innerText = 'Error!';
+				if (e.target) e.target.innerText = 'Error!';
 				action = null;
 
 				setTimeout(() => {
-					e.target.innerText = 'Copy';
+					if (e.target) e.target.innerText = 'Copy';
 				}, 5000);
 			});
 	};
@@ -316,6 +328,42 @@
 						<rect x="9" y="5" width="7" height="2" rx="1" fill="#727272" />
 					</svg>
 				</button>
+				<button
+					class="likes {config.style == 'likes' ? 'select' : ''}"
+					on:click={() => (config.style = 'likes')}
+					title="Style Likes - Eye-catching pour montages vidéo"
+				>
+					<svg
+						width="16"
+						height="16"
+						viewBox="0 0 24 24"
+						fill="none"
+						xmlns="http://www.w3.org/2000/svg"
+					>
+						<path
+							d="M18.77,11h-4.23l1.52-4.94C16.38,5.03,15.54,4,14.38,4c-0.58,0-1.14,0.24-1.52,0.65L7,11H3v10h4h1h9.43 c1.06,0,1.98-0.67,2.19-1.61l1.34-6C21.23,12.15,20.18,11,18.77,11z M7,20H4v-8h3V20z M19.98,13.17l-1.34,6 C18.54,19.65,18.03,20,17.43,20H8v-8.61l5.6-6.06C13.79,5.12,14.08,5,14.38,5c0.26,0,0.5,0.11,0.63,0.3 c0.07,0.1,0.15,0.26,0.09,0.47l-1.52,4.94L13.18,12h1.35h4.23c0.41,0,0.8,0.17,1.03,0.46C19.92,12.61,20.05,12.86,19.98,13.17z"
+							fill="#FFD700"
+						/>
+					</svg>
+				</button>
+				<button
+					class="subscribe {config.style == 'subscribe' ? 'select' : ''}"
+					on:click={() => (config.style = 'subscribe')}
+					title="Style Subscribe - Eye-catching pour montages vidéo"
+				>
+					<svg
+						width="16"
+						height="16"
+						viewBox="0 0 24 24"
+						fill="none"
+						xmlns="http://www.w3.org/2000/svg"
+					>
+						<path
+							d="M12,2A2,2,0,0,0,10,4.2V4.29C7.12,5.14,5,7.82,5,11v5L3,18v1H21V18l-2-2V11c0-3.18-2.12-5.86-5-6.71V4.2A2,2,0,0,0,12,2ZM17,16H7V11a5,5,0,0,1,10,0Zm-5,6a2,2,0,0,1-2-2h4A2,2,0,0,1,12,22Z"
+							fill="#FF4757"
+						/>
+					</svg>
+				</button>
 			</div>
 		</div>
 
@@ -409,46 +457,97 @@
 					</button>
 				</Tooltip>
 
-				<Tooltip title={$_('configuration.display_duration')}>
-					<button
-						class={config.displayDuration ? 'activate displaybutton' : 'displaybutton'}
-						on:click={() => (config.displayDuration = !config.displayDuration)}
-					>
-						<svg
-							width="15px"
-							height="15px"
-							viewBox="0 0 24 24"
-							fill="none"
-							xmlns="http://www.w3.org/2000/svg"
+				{#if config.style === 'likes' || config.style === 'subscribe'}
+					<Tooltip title={$_('configuration.display_channel_name')}>
+						<button
+							class={config.displayChannelName ? 'activate displaybutton' : 'displaybutton'}
+							on:click={() => (config.displayChannelName = !config.displayChannelName)}
 						>
-							<path
-								d="M22 12C22 17.52 17.52 22 12 22C6.48 22 2 17.52 2 12C2 6.48 6.48 2 12 2C17.52 2 22 6.48 22 12Z"
-								stroke="#f0f0f0"
-								stroke-width="1.5"
-								stroke-linecap="round"
-								stroke-linejoin="round"
-							/>
-							<path
-								opacity="0.4"
-								d="M15.7099 15.1798L12.6099 13.3298C12.0699 13.0098 11.6299 12.2398 11.6299 11.6098V7.50977"
-								stroke="#f0f0f0"
-								stroke-width="1.5"
-								stroke-linecap="round"
-								stroke-linejoin="round"
-							/>
-						</svg>
-					</button>
-				</Tooltip>
+							<svg
+								width="15px"
+								height="15px"
+								viewBox="0 0 24 24"
+								fill="none"
+								xmlns="http://www.w3.org/2000/svg"
+							>
+								<path
+									d="M4 4H20C20.5523 4 21 4.44772 21 5V19C21 19.5523 20.5523 20 20 20H4C3.44772 20 3 19.5523 3 19V5C3 4.44772 3.44772 4 4 4Z"
+									stroke="#f0f0f0"
+									stroke-width="1.5"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+								/>
+								<path
+									d="M7 8H17"
+									stroke="#f0f0f0"
+									stroke-width="1.5"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+								/>
+								<path
+									d="M7 12H17"
+									stroke="#f0f0f0"
+									stroke-width="1.5"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+								/>
+								<path
+									d="M7 16H13"
+									stroke="#f0f0f0"
+									stroke-width="1.5"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+								/>
+							</svg>
+						</button>
+					</Tooltip>
+				{/if}
+
+				{#if config.style !== 'likes' && config.style !== 'subscribe'}
+					<Tooltip title={$_('configuration.display_duration')}>
+						<button
+							class={config.displayDuration ? 'activate displaybutton' : 'displaybutton'}
+							on:click={() => (config.displayDuration = !config.displayDuration)}
+						>
+							<svg
+								width="15px"
+								height="15px"
+								viewBox="0 0 24 24"
+								fill="none"
+								xmlns="http://www.w3.org/2000/svg"
+							>
+								<path
+									d="M22 12C22 17.52 17.52 22 12 22C6.48 22 2 17.52 2 12C2 6.48 6.48 2 12 2C17.52 2 22 6.48 22 12Z"
+									stroke="#f0f0f0"
+									stroke-width="1.5"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+								/>
+								<path
+									opacity="0.4"
+									d="M15.7099 15.1798L12.6099 13.3298C12.0699 13.0098 11.6299 12.2398 11.6299 11.6098V7.50977"
+									stroke="#f0f0f0"
+									stroke-width="1.5"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+								/>
+							</svg>
+						</button>
+					</Tooltip>
+				{/if}
 			</div>
 		</div>
 
-		<div class="config-container">
-			<span
-				>{$_('configuration.progress')}
-				{#if config.duration > 0}<span class="lenght">{config.duration}%</span>{/if}</span
-			>
-			<input type="range" bind:value={config.duration} min="0" max="100" />
-		</div>
+		<!-- Barre de progression - uniquement pour les styles classiques -->
+		{#if config.style !== 'likes' && config.style !== 'subscribe'}
+			<div class="config-container">
+				<span
+					>{$_('configuration.progress')}
+					{#if config.duration > 0}<span class="lenght">{config.duration}%</span>{/if}</span
+				>
+				<input type="range" bind:value={config.duration} min="0" max="100" />
+			</div>
+		{/if}
 
 		<div class="config-container">
 			<span>{$_('configuration.theme')}</span>
@@ -581,10 +680,12 @@
 				/>
 			</div>
 
-			<div class="config-submenu" transition:slide>
-				<span transition:fade>• {$_('configuration.green_screen')}</span>
-				<Switch bind:value={config.greenScreen} />
-			</div>
+			{#if config.style !== 'likes' && config.style !== 'subscribe'}
+				<div class="config-submenu" transition:slide>
+					<span transition:fade>• {$_('configuration.green_screen')}</span>
+					<Switch bind:value={config.greenScreen} />
+				</div>
+			{/if}
 		{/if}
 
 		<div class="button-container">
@@ -665,6 +766,29 @@
 		}
 	}
 
+	@keyframes heartbeat {
+		0%,
+		100% {
+			transform: scale(1);
+		}
+		50% {
+			transform: scale(1.2);
+		}
+	}
+
+	@keyframes ring {
+		0%,
+		100% {
+			transform: rotate(0deg);
+		}
+		25% {
+			transform: rotate(15deg);
+		}
+		75% {
+			transform: rotate(-15deg);
+		}
+	}
+
 	.theme-button,
 	.display-config-button {
 		display: flex;
@@ -719,6 +843,30 @@
 
 			&:hover svg {
 				animation: scale 0.6s ease infinite alternate;
+			}
+		}
+
+		.likes {
+			border-left: 0;
+			border-top-left-radius: 0;
+			border-bottom-left-radius: 0;
+			border-left: 1px solid rgb(38 38 38);
+
+			&:hover svg {
+				animation: heartbeat 1s ease infinite;
+			}
+		}
+
+		.subscribe {
+			border-left: 0;
+			border-top-left-radius: 0;
+			border-bottom-left-radius: 0;
+			border-left: 1px solid rgb(38 38 38);
+			border-top-right-radius: 8px;
+			border-bottom-right-radius: 8px;
+
+			&:hover svg {
+				animation: ring 1s ease infinite;
 			}
 		}
 

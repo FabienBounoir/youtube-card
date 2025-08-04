@@ -74,7 +74,9 @@ export const POST = async ({ request }) => {
         channelLogo: await imageToBase64(channelInfo?.snippet.thumbnails?.default?.url),
         title: videoInfo?.snippet?.title || "Title not found",
         channel: channelInfo?.snippet?.title || "Channel not found",
+        subscribers: formatViews(channelInfo?.statistics?.subscriberCount),
         views: formatViews(videoInfo?.statistics.viewCount),
+        likes: formatViews(videoInfo?.statistics?.likeCount),
         time: dayjs(videoInfo?.snippet?.publishedAt).fromNow(),
         duration: dayjs.duration(videoInfo?.contentDetails?.duration).format("mm:ss"),
         isLive: videoInfo?.snippet?.liveBroadcastContent === "live",
@@ -137,10 +139,15 @@ function sendStatistics(channel, video) {
 
 /**
  * 
- * @param {string} views 
+ * @param {string|number} views 
  * @returns 
  */
 const formatViews = (views) => {
+    if (!views) return "0";
+
+    const numViews = typeof views === 'string' ? parseInt(views) : views;
+    if (isNaN(numViews)) return "0";
+
     /**
      * @type {Record<string, number>}
      */
@@ -151,15 +158,15 @@ const formatViews = (views) => {
     };
 
     for (const symbol in abbreviations) {
-        if (views >= abbreviations[symbol]) {
-            const abbreviatedViews = views / abbreviations[symbol];
+        if (numViews >= abbreviations[symbol]) {
+            const abbreviatedViews = numViews / abbreviations[symbol];
 
             const roundedViews = Math.round(abbreviatedViews * 10) / 10;
             return `${roundedViews} ${symbol}`;
         }
     }
 
-    return views || "0";
+    return numViews.toString();
 }
 
 /**
