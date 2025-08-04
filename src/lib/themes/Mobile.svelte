@@ -1,6 +1,4 @@
 <script>
-	import { cubicOut } from 'svelte/easing';
-	import { blur, fade, slide } from 'svelte/transition';
 	import { _ } from 'svelte-i18n';
 
 	/**
@@ -9,7 +7,7 @@
 	export let data;
 
 	/**
-	 * @type {{ initial: boolean, displayChannel: boolean, duration: number, displayMeta: boolean, theme: string, displayDuration: boolean, rounding: number, textSize: number, advanced: boolean, spacing: number, greenScreen: boolean }}
+	 * @type {{ initial: boolean, displayChannel: boolean, duration: number, displayMeta: boolean, theme: string, displayDuration: boolean, rounding: number, textSize: number, advanced: boolean, spacing: number, greenScreen: boolean, customTitle?: string }}
 	 */
 	export let config;
 
@@ -17,6 +15,31 @@
 	 * @type {boolean}
 	 */
 	export let loading;
+
+	const handleTitleInput = (/** @type {any} */ event) => {
+		const newTitle = event.target.textContent.trim();
+		config.customTitle = newTitle || undefined;
+	};
+
+	const handleTitleBlur = (/** @type {any} */ event) => {
+		const newTitle = event.target.textContent.trim();
+
+		if (!newTitle) {
+			event.target.textContent = data?.title || '';
+			config.customTitle = undefined;
+			config = config;
+		}
+	};
+
+	const handleKeydown = (/** @type {any} */ event) => {
+		if (event.key === 'Enter') {
+			event.preventDefault();
+			event.target.blur();
+		}
+	};
+
+	// Fonction pour obtenir le titre à afficher
+	$: displayTitle = config.customTitle || data?.title || '';
 </script>
 
 <div
@@ -53,7 +76,15 @@
 	</div>
 	<div class="info">
 		<div>
-			<h3>{data?.title}</h3>
+			<h3
+				class="editable-title"
+				contenteditable="true"
+				on:input={handleTitleInput}
+				on:blur={handleTitleBlur}
+				on:keydown={handleKeydown}
+			>
+				{displayTitle}
+			</h3>
 			{#if config.displayMeta}
 				<div class="meta">
 					{#if data?.isUpcoming}
@@ -206,6 +237,17 @@
 				overflow: hidden;
 				text-overflow: ellipsis;
 			}
+
+			.editable-title {
+				cursor: text;
+			}
+
+			.editable-title:hover,
+			.editable-title:focus {
+				outline: 2px solid #1976d2;
+				outline-offset: 2px;
+				border-radius: 4px;
+			}
 		}
 	}
 
@@ -240,6 +282,13 @@
 
 			h3 {
 				color: #f1f1f1;
+			}
+
+			.editable-title:hover,
+			.editable-title:focus {
+				outline: 2px solid #42a5f5;
+				outline-offset: 2px;
+				border-radius: 4px;
 			}
 		}
 
@@ -281,6 +330,13 @@
 
 			h3 {
 				color: #0f0f0f;
+			}
+
+			.editable-title:hover,
+			.editable-title:focus {
+				outline: 2px solid #1976d2;
+				outline-offset: 2px;
+				border-radius: 4px;
 			}
 		}
 	}
