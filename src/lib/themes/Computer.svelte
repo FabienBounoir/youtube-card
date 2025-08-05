@@ -9,7 +9,7 @@
 	export let data;
 
 	/**
-	 * @type {{ initial: boolean, displayChannel: boolean, duration: number, displayMeta: boolean, theme: string, displayDuration: boolean, rounding: number, textSize: number, advanced: boolean, spacing: number }}
+	 * @type {{ initial: boolean, displayChannel: boolean, duration: number, displayMeta: boolean, theme: string, displayDuration: boolean, rounding: number, textSize: number, advanced: boolean, spacing: number, greenScreen: boolean, customTitle?: string }}
 	 */
 	export let config;
 
@@ -17,6 +17,32 @@
 	 * @type {boolean}
 	 */
 	export let loading;
+
+	const handleTitleInput = (/** @type {any} */ event) => {
+		const newTitle = event.target.textContent.trim();
+		config.customTitle = newTitle || undefined;
+		config = config;
+	};
+
+	const handleTitleBlur = (/** @type {any} */ event) => {
+		const newTitle = event.target.textContent.trim();
+		// Si le titre est vide, remettre le titre original
+		if (!newTitle) {
+			event.target.textContent = data?.title || '';
+			config.customTitle = undefined;
+			config = config;
+		}
+	};
+
+	const handleKeydown = (/** @type {any} */ event) => {
+		if (event.key === 'Enter') {
+			event.preventDefault();
+			event.target.blur();
+		}
+	};
+
+	// Fonction pour obtenir le titre à afficher
+	$: displayTitle = config.customTitle || data?.title || '';
 </script>
 
 <div
@@ -27,8 +53,13 @@
 		? config.spacing
 		: 1};"
 >
-	<div class="thumbnail" style="background-image: url({data?.thumbnail});">
-		{#if data?.thumbnailUrl}
+	<div
+		class="thumbnail"
+		style="background-image: url({data?.thumbnail}); {config.advanced && config.greenScreen
+			? 'background-color: #00FF00; background-image: none;'
+			: ''}"
+	>
+		{#if data?.thumbnailUrl && !(config.advanced && config.greenScreen)}
 			<img src={data?.thumbnailUrl} alt="youtube thumbnail" />
 		{/if}
 
@@ -51,7 +82,15 @@
 			<img src={data?.channelLogo} alt="youtube channel logo" />
 		{/if}
 		<div>
-			<h3>{data?.title}</h3>
+			<h3
+				class="editable-title"
+				contenteditable="true"
+				on:input={handleTitleInput}
+				on:blur={handleTitleBlur}
+				on:keydown={handleKeydown}
+			>
+				{displayTitle}
+			</h3>
 			{#if config.displayMeta}
 				<div class="meta">
 					{#if config.displayChannel}
@@ -146,6 +185,12 @@
 			flex-wrap: nowrap;
 			width: 100%;
 
+			> div {
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+			}
+
 			.meta {
 				display: flex;
 				flex-direction: column;
@@ -182,6 +227,26 @@
 				-webkit-box-orient: vertical;
 				overflow: hidden;
 				text-overflow: ellipsis;
+			}
+
+			.editable-title {
+				cursor: text;
+				transition: all 0.2s ease;
+				border: 2px solid transparent;
+				border-radius: 4px;
+				padding: 2px 4px;
+				margin: 8px -4px -2px -4px;
+
+				&:hover {
+					background-color: rgba(66, 133, 244, 0.1);
+					border-color: rgba(66, 133, 244, 0.3);
+				}
+
+				&:focus {
+					outline: none;
+					background-color: rgba(66, 133, 244, 0.1);
+					border-color: #4285f4;
+				}
 			}
 		}
 	}

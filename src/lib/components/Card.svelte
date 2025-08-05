@@ -1,17 +1,19 @@
 <script>
 	import Mobile from '$lib/themes/Mobile.svelte';
 	import Computer from '../themes/Computer.svelte';
+	import Likes from '../themes/Likes.svelte';
+	import Subscribe from '../themes/Subscribe.svelte';
 
 	import { cubicOut } from 'svelte/easing';
 	import { blur, fade, slide } from 'svelte/transition';
 
 	/**
-	 * @type {{ initial: boolean, thumbnail: string, channelLogo: string, title: string, channel: string, views: string, time: string, duration: string , isLive: boolean, isUpcoming: boolean, startDate: string, viewers: string }}
+	 * @type {{ initial: boolean, thumbnail: string, channelLogo: string, title: string, channel: string, views: string, time: string, duration: string , isLive: boolean, isUpcoming: boolean, startDate: string, viewers: string, likes?: string, subscribers?: string }}
 	 */
 	export let data;
 
 	/**
-	 * @type {{ style: string, initial: boolean, displayChannel: boolean, duration: number, displayMeta: boolean, theme: string, displayDuration: boolean, rounding: number, textSize: number, advanced: boolean, spacing: number }}
+	 * @type {{ style: string, initial: boolean, displayChannel: boolean, duration: number, displayMeta: boolean, theme: string, displayDuration: boolean, rounding: number, textSize: number, advanced: boolean, spacing: number, greenScreen: boolean }}
 	 */
 	export let config;
 
@@ -32,6 +34,10 @@
 	{#if data}
 		{#if config.style === 'mobile'}
 			<Mobile {data} {config} {loading} />
+		{:else if config.style === 'likes'}
+			<Likes {data} {config} {loading} />
+		{:else if config.style === 'subscribe'}
+			<Subscribe {data} {config} {loading} />
 		{:else}
 			<Computer {data} {config} {loading} />
 		{/if}
