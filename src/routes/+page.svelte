@@ -4,7 +4,7 @@
 	import Card from '$lib/components/Card.svelte';
 
 	const regex =
-		/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+		/(?:https?:\/\/)?(?:(?:(?:www\.|m\.)?youtube\.com|music\.youtube\.com)\/(?:shorts\/|live\/|watch\?v=|v\/|e(?:mbed)?\/|[^\/\n\s]+\/\S+\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
 
 	/**
 	 * @type {{ initial: boolean, thumbnailUrl: string, thumbnail: string, channelLogoUrl: string, channelLogo: string, title: string, channel: string, views: string, time: string, duration: string, isLive: boolean, isUpcoming: boolean, startDate: string, viewers: string, likes?: string, subscribers?: string } | null}

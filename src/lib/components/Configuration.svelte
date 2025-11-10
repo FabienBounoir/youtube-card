@@ -9,7 +9,7 @@
 	import { _ } from 'svelte-i18n';
 
 	const regex =
-		/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+		/(?:https?:\/\/)?(?:(?:(?:www\.|m\.)?youtube\.com|music\.youtube\.com)\/(?:shorts\/|live\/|watch\?v=|v\/|e(?:mbed)?\/|[^\/\n\s]+\/\S+\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
 
 	/**
 	 * @type {string | null}
@@ -42,7 +42,7 @@
 	 */
 	const findVideoId = (url) => {
 		const regex =
-			/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+			/(?:https?:\/\/)?(?:(?:(?:www\.|m\.)?youtube\.com|music\.youtube\.com)\/(?:shorts\/|live\/|watch\?v=|v\/|e(?:mbed)?\/|[^\/\n\s]+\/\S+\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
 		const match = url.match(regex);
 		return match ? match[1] : null;
 	};
