@@ -32,6 +32,15 @@
         "upcoming": "UPCOMING",
         "planned_for": "Scheduled for {date}",
         "viewers": "{viewers} viewers",
-        "views_time": "{views} views"
+        "views_time": "{views} views",
+        "subscribe": "Subscribe",
+        "subscribed": "Subscribed",
+        "subscribers": "{subscribers} subscribers",
+        "channel_name": "Channel name",
+        "all_notifications": "All notifications",
+        "personalized_notifications": "Personalized notifications",
+        "like": "Like",
+        "dislike": "Dislike",
+        "green_screen_info": "Green screen to record the animation"
     }
 }
