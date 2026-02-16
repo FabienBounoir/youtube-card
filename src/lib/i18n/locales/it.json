@@ -26,5 +26,21 @@
         "information": "Progetto di <a style=\"color: var(--accent-color); text-decoration: none; font-weight: bold;\" href=\"https://bento.me/fabienbounoir\">@Bouns</a>, codice sorgente disponibile su <a style=\"color: var(--accent-color); text-decoration: none; font-weight: bold;\" href=\"https://github.com/FabienBounoir/youtube-card\">Github</a>.",
         "invalid_url": "URL del video Youtube non valido",
         "error_when_fetching": "Errore durante il recupero del video Youtube"
+    },
+    "cards": {
+        "live": "IN DIRETTA",
+        "upcoming": "IN ARRIVO",
+        "planned_for": "Programmato per il {date}",
+        "viewers": "{viewers} spettatori",
+        "views_time": "{views} visualizzazioni",
+        "subscribe": "Iscriviti",
+        "subscribed": "Iscritto",
+        "subscribers": "{subscribers} iscritti",
+        "channel_name": "Nome del canale",
+        "all_notifications": "Tutte le notifiche",
+        "personalized_notifications": "Notifiche personalizzate",
+        "like": "Mi piace",
+        "dislike": "Non mi piace",
+        "green_screen_info": "Schermo verde per registrare l'animazione"
     }
 }

@@ -32,6 +32,15 @@
         "upcoming": "À VENIR",
         "planned_for": "Planifier pour le {date}",
         "viewers": "{viewers} spectateurs",
-        "views_time": "{views} vues"
+        "views_time": "{views} vues",
+        "subscribe": "S'abonner",
+        "subscribed": "Abonné",
+        "subscribers": "{subscribers} abonnés",
+        "channel_name": "Nom de la chaîne",
+        "all_notifications": "Toutes les notifications",
+        "personalized_notifications": "Notifications personnalisées",
+        "like": "J'aime",
+        "dislike": "Je n'aime pas",
+        "green_screen_info": "Fond vert pour enregistrer l'animation"
     }
 }

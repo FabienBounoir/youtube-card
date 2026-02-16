@@ -3,6 +3,7 @@
 	import Computer from '../themes/Computer.svelte';
 	import Likes from '../themes/Likes.svelte';
 	import Subscribe from '../themes/Subscribe.svelte';
+	import { _ } from 'svelte-i18n';
 
 	import { cubicOut } from 'svelte/easing';
 	import { blur, fade, slide } from 'svelte/transition';
@@ -23,7 +24,7 @@
 	export let loading;
 </script>
 
-<div class="design">
+<div class="design" class:green-screen={["likes","subscribe"].includes(config.style)} >
 	{#key data?.thumbnailUrl}
 		<div
 			transition:blur={{ duration: 400, easing: cubicOut }}
@@ -41,6 +42,11 @@
 		{:else}
 			<Computer {data} {config} {loading} />
 		{/if}
+	{/if}
+	{#if ["likes","subscribe"].includes(config.style)}
+		<div class="green-screen-info">
+			💡 {$_('cards.green_screen_info')}
+		</div>
 	{/if}
 </div>
 
@@ -60,6 +66,10 @@
 		padding: 1rem;
 		width: min-content;
 
+		&.green-screen {
+			background: #00ff00;
+		}
+
 		.background {
 			position: absolute;
 
@@ -76,12 +86,33 @@
 
 			filter: blur(2em);
 		}
+
+		.green-screen-info {
+			position: absolute;
+			bottom: 1rem;
+			left: 50%;
+			transform: translateX(-50%);
+			background: rgba(0, 0, 0, 0.8);
+			color: #fff;
+			padding: 0.5rem 1rem;
+			border-radius: 0.5rem;
+			font-size: 0.85rem;
+			max-width: 90%;
+			text-align: center;
+			backdrop-filter: blur(10px);
+			border: 1px solid rgba(255, 255, 255, 0.1);
+		}
 	}
 
 	@media screen and (max-width: 700px) {
 		.design {
 			padding: 1rem;
 			min-width: 90vw;
+
+			.green-screen-info {
+				font-size: 0.75rem;
+				padding: 0.4rem 0.8rem;
+			}
 		}
 	}
 </style>
